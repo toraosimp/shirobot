@@ -291,7 +291,7 @@ const SPECIAL_OCCASIONS = [
 
 // Hardcoded messages
 const BIRTHDAY_MESSAGE = "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! 🐾";
-const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. Make sure to read the rules in the #rules channel and pick out your roles in the #roles channel. 😊🐾";
+const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. Make sure to read the rules in the <#1421050879234281565> channel and pick out your roles in the <#1422275724697665607> channel. 😊<:paw:1424057688492347509>";
 
 let botData = {
     birthdays: {},
@@ -838,4 +838,5 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
