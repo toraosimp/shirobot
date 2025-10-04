@@ -291,7 +291,7 @@ const SPECIAL_OCCASIONS = [
 
 // Hardcoded messages
 const BIRTHDAY_MESSAGE = "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! :paw:";
-const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊🐾";
+const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊:paw:";
 
 let botData = {
     birthdays: {},
@@ -470,22 +470,64 @@ async function handleListBirthdays(message) {
 
 async function handleListOccasions(message) {
     try {
-        const embed = new EmbedBuilder()
-            .setColor("#0099ff")
-            .setTitle("Special Occasions")
-            .setDescription("Here's a list of special occasions!")
-            .addFields(
-                SPECIAL_OCCASIONS.map(occasion => ({
-                    name: occasion.date,
-                    value: occasion.event,
-                    inline: true
-                }))
-            );
+        // Discord has a limit of 25 fields per embed, so we need to split into multiple embeds
+        const occasionsPerEmbed = 25;
+        const totalOccasions = SPECIAL_OCCASIONS.length;
+        
+        if (totalOccasions <= occasionsPerEmbed) {
+            // Single embed for small lists
+            const embed = new EmbedBuilder()
+                .setColor("#0099ff")
+                .setTitle("Special Occasions")
+                .setDescription("Here's a list of special occasions!")
+                .addFields(
+                    SPECIAL_OCCASIONS.map(occasion => ({
+                        name: occasion.date,
+                        value: occasion.event,
+                        inline: true
+                    }))
+                );
 
-        await message.reply({ embeds: [embed] });
+            await message.reply({ embeds: [embed] });
+        } else {
+            // Multiple embeds for large lists
+            const embeds = [];
+            for (let i = 0; i < totalOccasions; i += occasionsPerEmbed) {
+                const chunk = SPECIAL_OCCASIONS.slice(i, i + occasionsPerEmbed);
+                const embed = new EmbedBuilder()
+                    .setColor("#0099ff")
+                    .setTitle(`Special Occasions ${i === 0 ? '' : `(${Math.floor(i/occasionsPerEmbed) + 1})`}`)
+                    .setDescription(i === 0 ? "Here's a list of special occasions!" : "Continued...")
+                    .addFields(
+                        chunk.map(occasion => ({
+                            name: occasion.date,
+                            value: occasion.event,
+                            inline: true
+                        }))
+                    );
+                embeds.push(embed);
+            }
+
+            // Send multiple embeds
+            for (const embed of embeds) {
+                await message.channel.send({ embeds: [embed] });
+            }
+        }
     } catch (error) {
         console.error("Error creating occasions embed:", error);
-        message.reply("Sorry, there was an error displaying the occasions list.");
+        // Fallback to regular message if embed fails
+        let list = "**Special Occasions:**\n";
+        for (const occasion of SPECIAL_OCCASIONS) {
+            const line = `• ${occasion.date} - ${occasion.event}\n`;
+            if (list.length + line.length > 1900) {
+                await message.reply(list);
+                list = "";
+            }
+            list += line;
+        }
+        if (list.length > 0) {
+            await message.reply(list);
+        }
     }
 }
 
@@ -563,34 +605,61 @@ async function handleListSongs(message) {
     }
 
     try {
-        const embed = new EmbedBuilder()
-            .setColor("#0099ff")
-            .setTitle("Current Song List")
-            .setDescription("Here are all the songs in the list:")
-            .addFields(
-                botData.songs.map((song, index) => ({
-                    name: `${index + 1}.`,
-                    value: song,
-                    inline: false
-                }))
-            );
+        // Discord has a limit of 25 fields per embed, so we need to split into multiple embeds
+        const songsPerEmbed = 25;
+        const totalSongs = botData.songs.length;
+        
+        if (totalSongs <= songsPerEmbed) {
+            // Single embed for small lists
+            const embed = new EmbedBuilder()
+                .setColor("#0099ff")
+                .setTitle("Current Song List")
+                .setDescription("Here are all the songs in the list:")
+                .addFields(
+                    botData.songs.map((song, index) => ({
+                        name: `${index + 1}.`,
+                        value: song,
+                        inline: false
+                    }))
+                );
 
-        await message.reply({ embeds: [embed] });
+            await message.reply({ embeds: [embed] });
+        } else {
+            // Multiple embeds for large lists
+            const embeds = [];
+            for (let i = 0; i < totalSongs; i += songsPerEmbed) {
+                const chunk = botData.songs.slice(i, i + songsPerEmbed);
+                const embed = new EmbedBuilder()
+                    .setColor("#0099ff")
+                    .setTitle(`Current Song List ${i === 0 ? '' : `(${Math.floor(i/songsPerEmbed) + 1})`}`)
+                    .setDescription(i === 0 ? "Here are all the songs in the list:" : "Continued...")
+                    .addFields(
+                        chunk.map((song, index) => ({
+                            name: `${i + index + 1}.`,
+                            value: song,
+                            inline: false
+                        }))
+                    );
+                embeds.push(embed);
+            }
+
+            // Send multiple embeds
+            for (const embed of embeds) {
+                await message.channel.send({ embeds: [embed] });
+            }
+        }
     } catch (error) {
         console.error("Error creating songs embed:", error);
         // Fallback to regular message if embed fails
         let list = "**Current Song List:**\n";
         for (let i = 0; i < botData.songs.length; i++) {
             const line = `${i + 1}. ${botData.songs[i]}\n`;
-
-            if (list.length + line.length > 1990) {
+            if (list.length + line.length > 1900) {
                 await message.reply(list);
                 list = "";
             }
-
             list += line;
         }
-
         if (list.length > 0) {
             await message.reply(list);
         }
