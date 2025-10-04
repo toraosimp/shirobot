@@ -1029,17 +1029,12 @@ async function handleHelp(message) {
             },
             {
                 name: "**Occasion Commands**",
-                value: "`u!addoccasion @user MM/DD Name` - Add an occasion\n`u!removeoccasion @user Name` - Remove an occasion\n`u!listoccasions` - List all occasions",
+                value: "`u!listoccasions` - List all occasions",
                 inline: false,
             },
             {
                 name: "**Configuration**",
                 value: "`u!setchannel <type> #channel` - Set channel (birthday/occasion/welcome)\n`u!setmessage <type> message` - Set custom message\n`u!setbroadcastrole @role` - Set broadcast permission role",
-                inline: false,
-            },
-            {
-                name: "**Role Reactions**",
-                value: "`u!setuproles <message_id> <emoji> @role` - Setup role reactions",
                 inline: false,
             },
             {
@@ -1135,6 +1130,7 @@ async function sendOccasionMessage(userId, occasionName) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
