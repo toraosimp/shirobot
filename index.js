@@ -816,8 +816,15 @@ async function handleSetupRoles(message, args) {
 }
 
 async function handlePun(message) {
+    if (!PUNS || PUNS.length === 0) {
+        return message.reply("No puns are available at the moment.");
+    }
     const randomPun = PUNS[Math.floor(Math.random() * PUNS.length)];
-    message.reply(randomPun);
+    try {
+        await message.reply(randomPun);
+    } catch (err) {
+        console.error("Error sending pun:", err);
+    }
 }
 
 async function handleAddSong(message, args) {
@@ -873,11 +880,20 @@ async function handleListSongs(message) {
     }
 
     let list = "**Current Song List:**\n";
-    botData.songs.forEach((song, index) => {
-        list += `${index + 1}. ${song}\n`;
-    });
+    for (let i = 0; i < botData.songs.length; i++) {
+        const line = `${i + 1}. ${botData.songs[i]}\n`;
 
-    message.reply(list);
+        if (list.length + line.length > 1990) { // reserve buffer for formatting
+            await message.reply(list);
+            list = "";
+        }
+
+        list += line;
+    }
+
+    if (list.length > 0) {
+        await message.reply(list);
+    }
 }
 
 async function handleSong(message) {
@@ -1119,4 +1135,5 @@ async function sendOccasionMessage(userId, occasionName) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
