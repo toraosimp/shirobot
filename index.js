@@ -261,9 +261,9 @@ let botData = {
         welcome: null,
     },
     messages: {
-        birthday: "Happy Birthday {user}! 🎉🎂 Wishing you an amazing day!",
+        birthday: "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! :paw:",
         occasion: "Happy {occasion} {user}! 🎊",
-        welcome: "Welcome to the server, {user}! 👋",
+        welcome: "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊:paw: ",
     },
     roleReactions: {},
     broadcastRole: null,
@@ -1024,7 +1024,7 @@ async function handleHelp(message) {
         .addFields(
             {
                 name: "**Birthday Commands**",
-                value: "`u!addbirthday @user MM/DD` - Add a birthday\n`u!removebirthday @user` - Remove a birthday\n`u!listbirthdays` - List all birthdays",
+                value: "`u!addbirthday @user MM/DD` - Add a birthday\n`u!removebirthday @user` - Remove a birthday\n`u!listbirthdays` - List all birthdays of server members",
                 inline: false,
             },
             {
@@ -1135,5 +1135,6 @@ async function sendOccasionMessage(userId, occasionName) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
