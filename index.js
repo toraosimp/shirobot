@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const { Client, GatewayIntentBits, PermissionsBitField, EmbedBuilder } = require("discord.js");
 const cron = require("node-cron");
@@ -150,3 +149,4 @@ client.on("messageCreate", async message => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
