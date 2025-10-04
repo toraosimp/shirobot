@@ -291,7 +291,7 @@ const SPECIAL_OCCASIONS = [
 
 // Hardcoded messages
 const BIRTHDAY_MESSAGE = "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! :paw:";
-const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊:paw:";
+const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊🐾";
 
 let botData = {
     birthdays: {},
@@ -412,14 +412,6 @@ client.on("messageCreate", async (message) => {
 });
 
 async function handleAddBirthday(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
-    ) {
-        return message.reply(
-            "You need Administrator permission to use this command.",
-        );
-    }
-
     if (args.length < 2) {
         return message.reply("Usage: u!addbirthday @user MM/DD");
     }
@@ -427,6 +419,12 @@ async function handleAddBirthday(message, args) {
     const userMention = message.mentions.users.first();
     if (!userMention) {
         return message.reply("Please mention a valid user.");
+    }
+
+    // Allow users to set their own birthday, or admins to set any birthday
+    if (userMention.id !== message.author.id && 
+        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+        return message.reply("You can only set your own birthday. Admins can set birthdays for others.");
     }
 
     const dateStr = args[1];
@@ -471,33 +469,40 @@ async function handleListBirthdays(message) {
 }
 
 async function handleListOccasions(message) {
-    const embed = new EmbedBuilder()
-        .setColor("#0099ff")
-        .setTitle("Special Occasions")
-        .setDescription("Here's a list of special occasions!")
-        .addFields(
-            SPECIAL_OCCASIONS.map(occasion => ({
-                name: occasion.date,
-                value: occasion.event,
-                inline: true
-            }))
-        );
+    try {
+        const embed = new EmbedBuilder()
+            .setColor("#0099ff")
+            .setTitle("Special Occasions")
+            .setDescription("Here's a list of special occasions!")
+            .addFields(
+                SPECIAL_OCCASIONS.map(occasion => ({
+                    name: occasion.date,
+                    value: occasion.event,
+                    inline: true
+                }))
+            );
 
-    message.reply({ embeds: [embed] });
+        await message.reply({ embeds: [embed] });
+    } catch (error) {
+        console.error("Error creating occasions embed:", error);
+        message.reply("Sorry, there was an error displaying the occasions list.");
+    }
 }
 
 async function handleRemoveBirthday(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
-    ) {
-        return message.reply(
-            "You need Administrator permission to use this command.",
-        );
+    if (args.length < 1) {
+        return message.reply("Usage: u!removebirthday @user");
     }
 
     const userMention = message.mentions.users.first();
     if (!userMention) {
         return message.reply("Please mention a valid user.");
+    }
+
+    // Allow users to remove their own birthday, or admins to remove any birthday
+    if (userMention.id !== message.author.id && 
+        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+        return message.reply("You can only remove your own birthday. Admins can remove birthdays for others.");
     }
 
     if (botData.birthdays[userMention.id]) {
@@ -522,14 +527,6 @@ async function handlePun(message) {
 }
 
 async function handleAddSong(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
-    ) {
-        return message.reply(
-            "You need Administrator permission to use this command.",
-        );
-    }
-
     if (args.length === 0) {
         return message.reply("Usage: u!addsong Song Name - Artist");
     }
@@ -542,14 +539,6 @@ async function handleAddSong(message, args) {
 }
 
 async function handleRemoveSong(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
-    ) {
-        return message.reply(
-            "You need Administrator permission to use this command.",
-        );
-    }
-
     if (args.length === 0) {
         return message.reply("Usage: u!removesong Song Name - Artist");
     }
@@ -573,20 +562,38 @@ async function handleListSongs(message) {
         return message.reply("No songs have been added to the list yet.");
     }
 
-    let list = "**Current Song List:**\n";
-    for (let i = 0; i < botData.songs.length; i++) {
-        const line = `${i + 1}. ${botData.songs[i]}\n`;
+    try {
+        const embed = new EmbedBuilder()
+            .setColor("#0099ff")
+            .setTitle("Current Song List")
+            .setDescription("Here are all the songs in the list:")
+            .addFields(
+                botData.songs.map((song, index) => ({
+                    name: `${index + 1}.`,
+                    value: song,
+                    inline: false
+                }))
+            );
 
-        if (list.length + line.length > 1990) {
-            await message.reply(list);
-            list = "";
+        await message.reply({ embeds: [embed] });
+    } catch (error) {
+        console.error("Error creating songs embed:", error);
+        // Fallback to regular message if embed fails
+        let list = "**Current Song List:**\n";
+        for (let i = 0; i < botData.songs.length; i++) {
+            const line = `${i + 1}. ${botData.songs[i]}\n`;
+
+            if (list.length + line.length > 1990) {
+                await message.reply(list);
+                list = "";
+            }
+
+            list += line;
         }
 
-        list += line;
-    }
-
-    if (list.length > 0) {
-        await message.reply(list);
+        if (list.length > 0) {
+            await message.reply(list);
+        }
     }
 }
 
@@ -696,7 +703,7 @@ async function handleHelp(message) {
         .addFields(
             {
                 name: "**Birthday Commands**",
-                value: "`u!addbirthday @user MM/DD` - Add a birthday (Admin only)\n`u!removebirthday @user` - Remove a birthday (Admin only)\n`u!listbirthdays` - List all birthdays of server members",
+                value: "`u!addbirthday @user MM/DD` - Add a birthday (Users can set their own, Admins can set any)\n`u!removebirthday @user` - Remove a birthday (Users can remove their own, Admins can remove any)\n`u!listbirthdays` - List all birthdays of server members",
                 inline: false,
             },
             {
@@ -711,7 +718,7 @@ async function handleHelp(message) {
             },
             {
                 name: "**Song Management**",
-                value: "`u!addsong Song Name` - Add a song to the list (Admin only)\n`u!removesong Song Name` - Remove a song from the list (Admin only)\n`u!listsongs` - List all songs currently in the list",
+                value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list\n`u!listsongs` - List all songs currently in the list",
                 inline: false,
             },
             {
@@ -762,4 +769,3 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
-
