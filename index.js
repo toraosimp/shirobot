@@ -15,12 +15,15 @@ const client = new Client({
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessageReactions
     ],
 });
 
 const PREFIX = "u!";
 const DATA_FILE = "./data.json";
+
+// Hardcoded channel IDs
+const BIRTHDAY_CHANNEL_ID = "1421050807989567509";
+const WELCOME_CHANNEL_ID = "1422311794382475284";
 
 const PUNS = [
     "Why don't skeletons ever fight each other? Because they don't have the guts.",
@@ -251,22 +254,48 @@ const DEFAULT_SONGS = [
     "Egao no Tsuzuki",
 ];
 
+// Hardcoded special occasions list
+const SPECIAL_OCCASIONS = [
+    { date: "03/15", event: "Mido-san's birthday" },
+    { date: "06/08", event: "Natsume-san's birthday" },
+    { date: "11/29", event: "Inumaru-san's birthday" },
+    { date: "12/06", event: "Isumi-san's birthday" },
+    { date: "08/31", event: "ŹOOĻ's anniversary!" },
+    { date: "08/24", event: "My birthday 😅" },
+    { date: "09/09", event: "Ryo-kun's birthday" },
+    { date: "01/17", event: "President Takanashi's birthday" },
+    { date: "01/25", event: "Iori Izumi-san's birthday" },
+    { date: "02/03", event: "Okazaki-san's birthday" },
+    { date: "02/14", event: "Nikaido-san's birthday" },
+    { date: "03/03", event: "Mitsuki Izumi-san's birthday" },
+    { date: "04/01", event: "Yotsuba-san's birthday" },
+    { date: "04/15", event: "Re:vale's anniversary!" },
+    { date: "04/23", event: "Anesagi-san's birthday" },
+    { date: "05/28", event: "Osaka-san's birthday" },
+    { date: "05/29", event: "President Okazaki's birthday" },
+    { date: "06/10", event: "IDOLiSH7's anniversary!" },
+    { date: "06/20", event: "Rokuya-san's birthday" },
+    { date: "07/09", event: "Kujo and Nanase-san's birthdays" },
+    { date: "08/16", event: "Yaotome-san's birthday" },
+    { date: "08/20", event: "IDOLiSH7 (the game) anniversary!" },
+    { date: "09/08", event: "Ogami-san's birthday" },
+    { date: "09/16", event: "President Yaotome's birthday" },
+    { date: "09/18", event: "TRIGGER's anniversary!" },
+    { date: "10/12", event: "Tsunashi-san's birthday" },
+    { date: "11/11", event: "Momo-san's birthday" },
+    { date: "11/25", event: "einsatZ release anniversary" },
+    { date: "12/06", event: "Źquare release anniversary" },
+    { date: "12/14", event: "Źenit release anniversary" },
+    { date: "12/24", event: "Yuki-san's birthday" },
+];
+
+// Hardcoded messages
+const BIRTHDAY_MESSAGE = "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! :paw:";
+const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊:paw:";
+
 let botData = {
     birthdays: {},
-    occasions: {},
     songs: [],
-    channels: {
-        birthday: null,
-        occasion: null,
-        welcome: null,
-    },
-    messages: {
-        birthday: "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! :paw:",
-        occasion: "Happy {occasion} {user}! 🎊",
-        welcome: "Hello and welcome to the server, {user}! We hope you enjoy your time here. 😊:paw: ",
-    },
-    roleReactions: {},
-    broadcastRole: null,
     lastBroadcast: {},
 };
 
@@ -284,13 +313,6 @@ async function loadData() {
                 botData.birthdays[userId].day,
                 10,
             );
-        }
-
-        for (const userId in botData.occasions) {
-            for (const occasion of botData.occasions[userId]) {
-                occasion.month = parseInt(occasion.month, 10);
-                occasion.day = parseInt(occasion.day, 10);
-            }
         }
 
         if (!botData.songs || botData.songs.length === 0) {
@@ -325,87 +347,14 @@ client.once("ready", async () => {
 });
 
 client.on("guildMemberAdd", async (member) => {
-    if (!botData.channels.welcome) return;
-
-    const channel = member.guild.channels.cache.get(botData.channels.welcome);
+    const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
     if (!channel) return;
 
-    const message = botData.messages.welcome.replace(
-        "{user}",
-        `<@${member.id}>`,
-    );
+    const message = WELCOME_MESSAGE.replace("{user}", `<@${member.id}>`);
     try {
         await channel.send(message);
     } catch (error) {
         console.error("Error sending welcome message:", error);
-    }
-});
-
-client.on("messageReactionAdd", async (reaction, user) => {
-    if (user.bot) return;
-
-    if (reaction.partial) {
-        try {
-            await reaction.fetch();
-        } catch (error) {
-            console.error("Error fetching reaction:", error);
-            return;
-        }
-    }
-
-    const messageId = reaction.message.id;
-    const emojiKey = reaction.emoji.id || reaction.emoji.name;
-
-    if (
-        botData.roleReactions[messageId] &&
-        botData.roleReactions[messageId][emojiKey]
-    ) {
-        const roleId = botData.roleReactions[messageId][emojiKey];
-        const member = reaction.message.guild.members.cache.get(user.id);
-        const role = reaction.message.guild.roles.cache.get(roleId);
-
-        if (member && role) {
-            try {
-                await member.roles.add(role);
-                console.log(`Added role ${role.name} to ${user.tag}`);
-            } catch (error) {
-                console.error("Error adding role:", error);
-            }
-        }
-    }
-});
-
-client.on("messageReactionRemove", async (reaction, user) => {
-    if (user.bot) return;
-
-    if (reaction.partial) {
-        try {
-            await reaction.fetch();
-        } catch (error) {
-            console.error("Error fetching reaction:", error);
-            return;
-        }
-    }
-
-    const messageId = reaction.message.id;
-    const emojiKey = reaction.emoji.id || reaction.emoji.name;
-
-    if (
-        botData.roleReactions[messageId] &&
-        botData.roleReactions[messageId][emojiKey]
-    ) {
-        const roleId = botData.roleReactions[messageId][emojiKey];
-        const member = reaction.message.guild.members.cache.get(user.id);
-        const role = reaction.message.guild.roles.cache.get(roleId);
-
-        if (member && role) {
-            try {
-                await member.roles.remove(role);
-                console.log(`Removed role ${role.name} from ${user.tag}`);
-            } catch (error) {
-                console.error("Error removing role:", error);
-            }
-        }
     }
 });
 
@@ -420,9 +369,6 @@ client.on("messageCreate", async (message) => {
             case "addbirthday":
                 await handleAddBirthday(message, args);
                 break;
-            case "addoccasion":
-                await handleAddOccasion(message, args);
-                break;
             case "listbirthdays":
                 await handleListBirthdays(message);
                 break;
@@ -431,18 +377,6 @@ client.on("messageCreate", async (message) => {
                 break;
             case "removebirthday":
                 await handleRemoveBirthday(message, args);
-                break;
-            case "removeoccasion":
-                await handleRemoveOccasion(message, args);
-                break;
-            case "setchannel":
-                await handleSetChannel(message, args);
-                break;
-            case "setmessage":
-                await handleSetMessage(message, args);
-                break;
-            case "setuproles":
-                await handleSetupRoles(message, args);
                 break;
             case "pun":
                 await handlePun(message);
@@ -465,9 +399,6 @@ client.on("messageCreate", async (message) => {
             case "editbroadcast":
                 await handleEditBroadcast(message, args);
                 break;
-            case "setbroadcastrole":
-                await handleSetBroadcastRole(message, args);
-                break;
             case "help":
                 await handleHelp(message);
                 break;
@@ -482,10 +413,10 @@ client.on("messageCreate", async (message) => {
 
 async function handleAddBirthday(message, args) {
     if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
+        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
         return message.reply(
-            "You need Manage Server permission to use this command.",
+            "You need Administrator permission to use this command.",
         );
     }
 
@@ -526,60 +457,6 @@ async function handleAddBirthday(message, args) {
     );
 }
 
-async function handleAddOccasion(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
-    ) {
-        return message.reply(
-            "You need Manage Server permission to use this command.",
-        );
-    }
-
-    if (args.length < 3) {
-        return message.reply("Usage: u!addoccasion @user MM/DD Occasion Name");
-    }
-
-    const userMention = message.mentions.users.first();
-    if (!userMention) {
-        return message.reply("Please mention a valid user.");
-    }
-
-    const dateStr = args[1];
-    const dateMatch = dateStr.match(/^(\d{1,2})\/(\d{1,2})$/);
-    if (!dateMatch) {
-        return message.reply("Please use MM/DD format for the date.");
-    }
-
-    const [, month, day] = dateMatch;
-    const monthNum = parseInt(month, 10);
-    const dayNum = parseInt(day, 10);
-
-    if (monthNum < 1 || monthNum > 12 || dayNum < 1 || dayNum > 31) {
-        return message.reply(
-            "Invalid date. Please use MM/DD format with valid month and day.",
-        );
-    }
-
-    const occasionName = args.slice(2).join(" ");
-
-    if (!botData.occasions[userMention.id]) {
-        botData.occasions[userMention.id] = [];
-    }
-
-    botData.occasions[userMention.id].push({
-        month: monthNum,
-        day: dayNum,
-        name: occasionName,
-        username: userMention.username,
-    });
-
-    await saveData();
-
-    message.reply(
-        `Occasion added for ${userMention.username}: ${occasionName} on ${monthNum}/${dayNum}`,
-    );
-}
-
 async function handleListBirthdays(message) {
     if (Object.keys(botData.birthdays).length === 0) {
         return message.reply("No birthdays have been added yet.");
@@ -594,26 +471,27 @@ async function handleListBirthdays(message) {
 }
 
 async function handleListOccasions(message) {
-    if (Object.keys(botData.occasions).length === 0) {
-        return message.reply("No occasions have been added yet.");
-    }
+    const embed = new EmbedBuilder()
+        .setColor("#0099ff")
+        .setTitle("Special Occasions")
+        .setDescription("Here's a list of special occasions!")
+        .addFields(
+            SPECIAL_OCCASIONS.map(occasion => ({
+                name: occasion.date,
+                value: occasion.event,
+                inline: true
+            }))
+        );
 
-    let list = "**Occasions:**\n";
-    for (const [userId, occasions] of Object.entries(botData.occasions)) {
-        occasions.forEach((occasion) => {
-            list += `• ${occasion.username}: ${occasion.name} on ${occasion.month}/${occasion.day}\n`;
-        });
-    }
-
-    message.reply(list);
+    message.reply({ embeds: [embed] });
 }
 
 async function handleRemoveBirthday(message, args) {
     if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
+        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
         return message.reply(
-            "You need Manage Server permission to use this command.",
+            "You need Administrator permission to use this command.",
         );
     }
 
@@ -631,190 +509,6 @@ async function handleRemoveBirthday(message, args) {
     }
 }
 
-async function handleRemoveOccasion(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
-    ) {
-        return message.reply(
-            "You need Manage Server permission to use this command.",
-        );
-    }
-
-    if (args.length < 2) {
-        return message.reply("Usage: u!removeoccasion @user Occasion Name");
-    }
-
-    const userMention = message.mentions.users.first();
-    if (!userMention) {
-        return message.reply("Please mention a valid user.");
-    }
-
-    const occasionName = args.slice(1).join(" ");
-
-    if (botData.occasions[userMention.id]) {
-        const index = botData.occasions[userMention.id].findIndex(
-            (o) => o.name.toLowerCase() === occasionName.toLowerCase(),
-        );
-        if (index !== -1) {
-            botData.occasions[userMention.id].splice(index, 1);
-            if (botData.occasions[userMention.id].length === 0) {
-                delete botData.occasions[userMention.id];
-            }
-            await saveData();
-            message.reply(
-                `Occasion "${occasionName}" removed for ${userMention.username}.`,
-            );
-        } else {
-            message.reply(
-                `No occasion named "${occasionName}" found for ${userMention.username}.`,
-            );
-        }
-    } else {
-        message.reply(`No occasions found for ${userMention.username}.`);
-    }
-}
-
-async function handleSetChannel(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
-    ) {
-        return message.reply(
-            "You need Manage Server permission to use this command.",
-        );
-    }
-
-    if (args.length < 2) {
-        return message.reply(
-            "Usage: u!setchannel <birthday|occasion|welcome> #channel",
-        );
-    }
-
-    const type = args[0].toLowerCase();
-    if (!["birthday", "occasion", "welcome"].includes(type)) {
-        return message.reply(
-            "Channel type must be: birthday, occasion, or welcome",
-        );
-    }
-
-    const channel = message.mentions.channels.first();
-    if (!channel) {
-        return message.reply("Please mention a valid channel.");
-    }
-
-    botData.channels[type] = channel.id;
-    await saveData();
-
-    message.reply(
-        `${type.charAt(0).toUpperCase() + type.slice(1)} channel set to ${channel}.`,
-    );
-}
-
-async function handleSetMessage(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
-    ) {
-        return message.reply(
-            "You need Manage Server permission to use this command.",
-        );
-    }
-
-    if (args.length < 2) {
-        return message.reply(
-            "Usage: u!setmessage <birthday|occasion|welcome> Your message here\nUse {user} for user mention and {occasion} for occasion name.",
-        );
-    }
-
-    const type = args[0].toLowerCase();
-    if (!["birthday", "occasion", "welcome"].includes(type)) {
-        return message.reply(
-            "Message type must be: birthday, occasion, or welcome",
-        );
-    }
-
-    const customMessage = args.slice(1).join(" ");
-    botData.messages[type] = customMessage;
-    await saveData();
-
-    message.reply(
-        `${type.charAt(0).toUpperCase() + type.slice(1)} message updated.`,
-    );
-}
-
-async function handleSetupRoles(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
-    ) {
-        return message.reply(
-            "You need Manage Server permission to use this command.",
-        );
-    }
-
-    if (args.length < 2) {
-        return message.reply(
-            "Usage: u!setuproles <message_id> <emoji> @role [<emoji> @role ...]",
-        );
-    }
-
-    const messageId = args[0];
-
-    try {
-        const targetMessage = await message.channel.messages.fetch(messageId);
-
-        if (!botData.roleReactions[messageId]) {
-            botData.roleReactions[messageId] = {};
-        }
-
-        const mentionedRoles = Array.from(message.mentions.roles.values());
-        let roleIndex = 0;
-
-        for (let i = 1; i < args.length; i += 2) {
-            if (i + 1 >= args.length) break;
-
-            const emoji = args[i];
-            const roleArg = args[i + 1];
-
-            let role = null;
-
-            if (roleArg.startsWith("<@&") && roleArg.endsWith(">")) {
-                role = mentionedRoles[roleIndex];
-                roleIndex++;
-            } else {
-                role = message.guild.roles.cache.get(roleArg);
-            }
-
-            if (!role) {
-                message.channel.send(
-                    `Warning: Could not find role for ${emoji}, skipping...`,
-                );
-                continue;
-            }
-
-            const emojiKey = emoji.match(/<a?:.+:(\d+)>/)
-                ? emoji.match(/<a?:.+:(\d+)>/)[1]
-                : emoji;
-
-            botData.roleReactions[messageId][emojiKey] = role.id;
-
-            try {
-                await targetMessage.react(emoji);
-            } catch (error) {
-                console.error(`Could not react with ${emoji}:`, error);
-                message.channel.send(
-                    `Warning: Could not add reaction ${emoji} to message.`,
-                );
-            }
-        }
-
-        await saveData();
-        message.reply("Role reactions set up successfully!");
-    } catch (error) {
-        console.error("Error setting up roles:", error);
-        message.reply(
-            "Could not find that message. Make sure the message ID is correct and in this channel.",
-        );
-    }
-}
-
 async function handlePun(message) {
     if (!PUNS || PUNS.length === 0) {
         return message.reply("No puns are available at the moment.");
@@ -829,10 +523,10 @@ async function handlePun(message) {
 
 async function handleAddSong(message, args) {
     if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
+        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
         return message.reply(
-            "You need Manage Server permission to use this command.",
+            "You need Administrator permission to use this command.",
         );
     }
 
@@ -849,10 +543,10 @@ async function handleAddSong(message, args) {
 
 async function handleRemoveSong(message, args) {
     if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
+        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
         return message.reply(
-            "You need Manage Server permission to use this command.",
+            "You need Administrator permission to use this command.",
         );
     }
 
@@ -883,7 +577,7 @@ async function handleListSongs(message) {
     for (let i = 0; i < botData.songs.length; i++) {
         const line = `${i + 1}. ${botData.songs[i]}\n`;
 
-        if (list.length + line.length > 1990) { // reserve buffer for formatting
+        if (list.length + line.length > 1990) {
             await message.reply(list);
             list = "";
         }
@@ -909,18 +603,10 @@ async function handleSong(message) {
 }
 
 async function handleBroadcast(message, args) {
-    if (!botData.broadcastRole) {
-        return message.reply(
-            "Broadcast role has not been set. Ask an admin to use u!setbroadcastrole",
-        );
-    }
-
-    const hasRole = message.member.roles.cache.has(botData.broadcastRole);
     if (
-        !hasRole &&
         !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
-        return message.reply("You do not have permission to use this command.");
+        return message.reply("You need Administrator permission to use this command.");
     }
 
     if (args.length === 0) {
@@ -946,22 +632,25 @@ async function handleBroadcast(message, args) {
 }
 
 async function handleEditBroadcast(message, args) {
-    if (!botData.broadcastRole) {
-        return message.reply(
-            "Broadcast role has not been set. Ask an admin to use u!setbroadcastrole",
-        );
-    }
-
-    const hasRole = message.member.roles.cache.has(botData.broadcastRole);
     if (
-        !hasRole &&
         !message.member.permissions.has(PermissionsBitField.Flags.Administrator)
     ) {
-        return message.reply("You do not have permission to use this command.");
+        return message.reply("You need Administrator permission to use this command.");
     }
 
-    if (!botData.lastBroadcast[message.author.id]) {
-        return message.reply("You haven't sent any broadcast messages yet.");
+    // Check if the message is a reply to another message
+    let targetMessageId = null;
+    let targetChannelId = message.channel.id;
+
+    if (message.reference && message.reference.messageId) {
+        // User replied to a message
+        targetMessageId = message.reference.messageId;
+    } else if (botData.lastBroadcast[message.author.id]) {
+        // Use the last broadcast message
+        targetMessageId = botData.lastBroadcast[message.author.id].messageId;
+        targetChannelId = botData.lastBroadcast[message.author.id].channelId;
+    } else {
+        return message.reply("Please reply to the message you want to edit, or use u!broadcast first.");
     }
 
     if (args.length === 0) {
@@ -969,13 +658,16 @@ async function handleEditBroadcast(message, args) {
     }
 
     const newMessage = args.join(" ");
-    const broadcastInfo = botData.lastBroadcast[message.author.id];
 
     try {
-        const channel = await client.channels.fetch(broadcastInfo.channelId);
-        const broadcastMessage = await channel.messages.fetch(
-            broadcastInfo.messageId,
-        );
+        const channel = await client.channels.fetch(targetChannelId);
+        const broadcastMessage = await channel.messages.fetch(targetMessageId);
+        
+        // Check if the bot sent the message
+        if (broadcastMessage.author.id !== client.user.id) {
+            return message.reply("I can only edit messages that I sent!");
+        }
+
         await broadcastMessage.edit(newMessage);
 
         try {
@@ -996,26 +688,6 @@ async function handleEditBroadcast(message, args) {
     }
 }
 
-async function handleSetBroadcastRole(message, args) {
-    if (
-        !message.member.permissions.has(PermissionsBitField.Flags.ManageGuild)
-    ) {
-        return message.reply(
-            "You need Manage Server permission to use this command.",
-        );
-    }
-
-    const role = message.mentions.roles.first();
-    if (!role) {
-        return message.reply("Usage: u!setbroadcastrole @role");
-    }
-
-    botData.broadcastRole = role.id;
-    await saveData();
-
-    message.reply(`Broadcast role set to ${role}.`);
-}
-
 async function handleHelp(message) {
     const embed = new EmbedBuilder()
         .setColor("#0099ff")
@@ -1024,17 +696,12 @@ async function handleHelp(message) {
         .addFields(
             {
                 name: "**Birthday Commands**",
-                value: "`u!addbirthday @user MM/DD` - Add a birthday\n`u!removebirthday @user` - Remove a birthday\n`u!listbirthdays` - List all birthdays of server members",
+                value: "`u!addbirthday @user MM/DD` - Add a birthday (Admin only)\n`u!removebirthday @user` - Remove a birthday (Admin only)\n`u!listbirthdays` - List all birthdays of server members",
                 inline: false,
             },
             {
                 name: "**Occasion Commands**",
-                value: "`u!listoccasions` - List all occasions",
-                inline: false,
-            },
-            {
-                name: "**Configuration**",
-                value: "`u!setchannel <type> #channel` - Set channel (birthday/occasion/welcome)\n`u!setmessage <type> message` - Set custom message\n`u!setbroadcastrole @role` - Set broadcast permission role",
+                value: "`u!listoccasions` - List all special occasions",
                 inline: false,
             },
             {
@@ -1044,12 +711,12 @@ async function handleHelp(message) {
             },
             {
                 name: "**Song Management**",
-                value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list\n`u!listsongs` - List all songs currently in the list",
+                value: "`u!addsong Song Name` - Add a song to the list (Admin only)\n`u!removesong Song Name` - Remove a song from the list (Admin only)\n`u!listsongs` - List all songs currently in the list",
                 inline: false,
             },
             {
                 name: "**Broadcasting**",
-                value: "`u!broadcast message` - Send a message as the bot (requires role)\n`u!editbroadcast message` - Edit your last broadcast message",
+                value: "`u!broadcast message` - Send a message as the bot (Admin only)\n`u!editbroadcast message` - Edit your last broadcast message or reply to a message to edit it (Admin only)",
                 inline: false,
             },
         );
@@ -1070,19 +737,6 @@ function startScheduler() {
                     await sendBirthdayMessage(userId);
                 }
             }
-
-            for (const [userId, occasions] of Object.entries(
-                botData.occasions,
-            )) {
-                for (const occasion of occasions) {
-                    if (
-                        occasion.month === currentMonth &&
-                        occasion.day === currentDay
-                    ) {
-                        await sendOccasionMessage(userId, occasion.name);
-                    }
-                }
-            }
         },
         {
             timezone: "Asia/Tokyo",
@@ -1093,12 +747,10 @@ function startScheduler() {
 }
 
 async function sendBirthdayMessage(userId) {
-    if (!botData.channels.birthday) return;
-
-    const channel = client.channels.cache.get(botData.channels.birthday);
+    const channel = client.channels.cache.get(BIRTHDAY_CHANNEL_ID);
     if (!channel) return;
 
-    const message = botData.messages.birthday.replace("{user}", `<@${userId}>`);
+    const message = BIRTHDAY_MESSAGE.replace("{user}", `<@${userId}>`);
 
     try {
         await channel.send(message);
@@ -1108,29 +760,6 @@ async function sendBirthdayMessage(userId) {
     }
 }
 
-async function sendOccasionMessage(userId, occasionName) {
-    if (!botData.channels.occasion) return;
-
-    const channel = client.channels.cache.get(botData.channels.occasion);
-    if (!channel) return;
-
-    const message = botData.messages.occasion
-        .replace("{user}", `<@${userId}>`)
-        .replace("{occasion}", occasionName);
-
-    try {
-        await channel.send(message);
-        console.log(
-            `Sent occasion message for user ${userId}: ${occasionName}`,
-        );
-    } catch (error) {
-        console.error("Error sending occasion message:", error);
-    }
-}
-
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
-
-
-
 
