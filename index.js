@@ -351,7 +351,7 @@ client.once("ready", async () => {
     await loadData();
     
     // Set bot status - Fixed to use ActivityType
-    client.user.setActivity("Currently managing ŹOOĻ....", { type: ActivityType.Playing });
+    client.user.setActivity("ŹOOĻ's Manager 🐾", { type: ActivityType.Playing });
     
     startScheduler();
 });
@@ -877,3 +877,4 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
