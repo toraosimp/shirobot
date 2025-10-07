@@ -1,5 +1,5 @@
 const express = require("express");
-const { Client, GatewayIntentBits, PermissionsBitField, EmbedBuilder } = require("discord.js");
+const { Client, GatewayIntentBits, PermissionsBitField, EmbedBuilder, ActivityType } = require("discord.js");
 const cron = require("node-cron");
 const moment = require("moment-timezone");
 const fs = require("fs").promises;
@@ -350,8 +350,8 @@ client.once("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     await loadData();
     
-    // Set bot status
-    client.user.setActivity("Currently managing ŹOOĻ....", { type: "PLAYING" });
+    // Set bot status - Fixed to use ActivityType
+    client.user.setActivity("Currently managing ŹOOĻ....", { type: ActivityType.Playing });
     
     startScheduler();
 });
@@ -469,7 +469,7 @@ async function handleAddBirthday(message, args) {
     const currentDay = now.date();
     
     if (monthNum === currentMonth && dayNum === currentDay) {
-        // Send birthday message after a short delay (1 minute)
+        // Send birthday message immediately with a 1-minute delay
         setTimeout(async () => {
             await sendBirthdayMessage(userMention.id);
         }, 60000); // 1 minute delay
@@ -860,7 +860,10 @@ function startScheduler() {
 
 async function sendBirthdayMessage(userId) {
     const channel = client.channels.cache.get(BIRTHDAY_CHANNEL_ID);
-    if (!channel) return;
+    if (!channel) {
+        console.error(`Birthday channel ${BIRTHDAY_CHANNEL_ID} not found`);
+        return;
+    }
 
     const message = BIRTHDAY_MESSAGE.replace("{user}", `<@${userId}>`);
 
