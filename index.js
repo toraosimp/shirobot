@@ -290,13 +290,14 @@ const SPECIAL_OCCASIONS = [
 ];
 
 // Hardcoded messages
-const BIRTHDAY_MESSAGE = "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! 🐾";
+const BIRTHDAY_MESSAGE = "Happy Birthday {user}! 🎉🎂 We hope you have an amazing day! <:paw:1424057688492347509>";
 const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you enjoy your time here. Make sure to read the rules in the <#1421050879234281565> channel and pick out your roles in the <#1422275724697665607> channel. 😊<:paw:1424057688492347509>";
 
 let botData = {
     birthdays: {},
     songs: [],
     lastBroadcast: {},
+    braincellCounter: 0,
 };
 
 async function loadData() {
@@ -323,11 +324,16 @@ async function loadData() {
             botData.lastBroadcast = {};
         }
 
+        if (botData.braincellCounter === undefined) {
+            botData.braincellCounter = 0;
+        }
+
         await saveData();
         console.log("Data loaded successfully");
     } catch (error) {
         console.log("No existing data file, starting fresh");
         botData.songs = [...DEFAULT_SONGS];
+        botData.braincellCounter = 0;
         await saveData();
     }
 }
@@ -343,6 +349,10 @@ async function saveData() {
 client.once("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
     await loadData();
+    
+    // Set bot status
+    client.user.setActivity("Currently managing ŹOOĻ....", { type: "PLAYING" });
+    
     startScheduler();
 });
 
@@ -402,6 +412,9 @@ client.on("messageCreate", async (message) => {
             case "help":
                 await handleHelp(message);
                 break;
+            case "counter":
+                await handleCounter(message);
+                break;
             default:
                 break;
         }
@@ -449,6 +462,18 @@ async function handleAddBirthday(message, args) {
         username: userMention.username,
     };
     await saveData();
+
+    // Check if today is the birthday that was just set
+    const now = moment.tz("Asia/Tokyo");
+    const currentMonth = now.month() + 1;
+    const currentDay = now.date();
+    
+    if (monthNum === currentMonth && dayNum === currentDay) {
+        // Send birthday message after a short delay (1 minute)
+        setTimeout(async () => {
+            await sendBirthdayMessage(userMention.id);
+        }, 60000); // 1 minute delay
+    }
 
     message.reply(
         `Birthday added for ${userMention.username}: ${monthNum}/${dayNum}`,
@@ -776,8 +801,8 @@ async function handleHelp(message) {
                 inline: false,
             },
             {
-                name: "**Occasion Commands**",
-                value: "`u!listoccasions` - List all special occasions",
+                name: "**IDOLiSH7 Occasion Commands**",
+                value: "`u!listoccasions` - List all the special IDOLiSH7 occasions",
                 inline: false,
             },
             {
@@ -798,6 +823,17 @@ async function handleHelp(message) {
         );
 
     message.reply({ embeds: [embed] });
+}
+
+async function handleCounter(message) {
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+        return; // Silent fail for non-admins
+    }
+
+    botData.braincellCounter++;
+    await saveData();
+    
+    await message.reply(`Braincell Counter Updated: ${botData.braincellCounter}`);
 }
 
 function startScheduler() {
@@ -838,5 +874,3 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
-
-
