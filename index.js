@@ -502,7 +502,7 @@ async function handleListOccasions(message) {
         if (totalOccasions <= occasionsPerEmbed) {
             // Single embed for small lists
             const embed = new EmbedBuilder()
-                .setColor("#0099ff")
+                .setColor("#8b8b8c")
                 .setTitle("Special Occasions")
                 .setDescription("Here's a list of special occasions!")
                 .addFields(
@@ -520,7 +520,7 @@ async function handleListOccasions(message) {
             for (let i = 0; i < totalOccasions; i += occasionsPerEmbed) {
                 const chunk = SPECIAL_OCCASIONS.slice(i, i + occasionsPerEmbed);
                 const embed = new EmbedBuilder()
-                    .setColor("#0099ff")
+                    .setColor("#8b8b8c")
                     .setTitle(`Special Occasions ${i === 0 ? '' : `(${Math.floor(i/occasionsPerEmbed) + 1})`}`)
                     .setDescription(i === 0 ? "Here's a list of special occasions!" : "Continued...")
                     .addFields(
@@ -637,7 +637,7 @@ async function handleListSongs(message) {
         if (totalSongs <= songsPerEmbed) {
             // Single embed for small lists
             const embed = new EmbedBuilder()
-                .setColor("#0099ff")
+                .setColor("#8b8b8c")
                 .setTitle("Current Song List")
                 .setDescription("Here are all the songs in the list:")
                 .addFields(
@@ -655,7 +655,7 @@ async function handleListSongs(message) {
             for (let i = 0; i < totalSongs; i += songsPerEmbed) {
                 const chunk = botData.songs.slice(i, i + songsPerEmbed);
                 const embed = new EmbedBuilder()
-                    .setColor("#0099ff")
+                    .setColor("#8b8b8c")
                     .setTitle(`Current Song List ${i === 0 ? '' : `(${Math.floor(i/songsPerEmbed) + 1})`}`)
                     .setDescription(i === 0 ? "Here are all the songs in the list:" : "Continued...")
                     .addFields(
@@ -791,8 +791,8 @@ async function handleEditBroadcast(message, args) {
 
 async function handleHelp(message) {
     const embed = new EmbedBuilder()
-        .setColor("#0099ff")
-        .setTitle("Bot Commands")
+        .setColor("#8b8b8c")
+        .setTitle("Shiro Bot Commands")
         .setDescription("Here are all available commands:")
         .addFields(
             {
@@ -877,4 +877,5 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
