@@ -305,7 +305,7 @@ const WELCOME_EMBEDS = [
             "▪ Avoid excessive spamming.\n\n" +
             "**2️⃣ PG-13 & Suggestive Content**\n" +
             "▪ This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
-            "▪ To access it, you can select the **18+ role** in <#1422275724697665607>. You **must be 18 or older**.\n" +
+            "▪ To access it, you can select the <@&1422307305806106724> in <#1422275724697665607>. You **must be 18 or older**.\n" +
             "▪ NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
             "**3️⃣ Sharing Fanart**\n" +
             "▪ Always link the **original source** when sharing fanart.\n" +
@@ -319,7 +319,7 @@ const WELCOME_EMBEDS = [
             "**6️⃣ Questions & Suggestions**\n" +
             "▪ If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
             "**7️⃣ Have Fun!**\n" +
-            "▪ Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, enjoy ŹOOĻ.  <:paw:1424057688492347509>"
+            "▪ Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, Enjoy ŹOOĻ.  <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -328,9 +328,9 @@ const WELCOME_EMBEDS = [
         .setDescription(
             "**Boost the server and unlock special perks!**\n" +
             "▪ Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\n" +
-            "▪ Gain **custom roles, titles, gradient role colors, and role icons** (once we unlock Level 2).\n" +
-            "▪ Your name will appear separately in the members list.\n" +
-            "▪ Boosting helps us maintain the **ŹOOĻ server tag**!"
+            "▪ Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\n" +
+            "▪ Server Boosters appear separately in the members list.\n" +
+            "▪ Boosting also helps us maintain the **ŹOOĻ server tag**!"
         ),
     
     new EmbedBuilder()
@@ -386,8 +386,8 @@ const WELCOME_EMBEDS = [
             "<#1422338837073498162> — Non-i7 general discussions go here.\n" +
             "<#1422338927641235496> — Non-i7 related games, movies, shows, etc.\n" +
             "<#1422305834590929086> — Vent channel (requires Vent role; see pinned rules).\n\n" +
-            "<#1422546276578496543> — Chat while in VC or control the ŹOOĻ Radio bot.\n" +
-            "<#1422899506537566340> — Streaming events/watch parties channel."
+            "<#1422546276578496543> — Chat while in VC or control the ŹOOĻ Radio bot here.\n" +
+            "<#1422899506537566340> — Streaming events/watch parties chat."
         )
 ];
 
@@ -1040,6 +1040,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
