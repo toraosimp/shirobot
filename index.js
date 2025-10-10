@@ -304,12 +304,12 @@ const WELCOME_EMBEDS = [
             "⠀▸ Avoid being rude, harassment, or insulting other characters or ships.\n" +
             "⠀▸ Avoid excessive spamming.\n\n" +
             "**<:paw:1424057688492347509> ⠀PG-13 & Suggestive Content**\n" +
-            " This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
+            "⠀▸ This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
             "⠀▸ To access it, you can select the <@&1422307305806106724> in <#1422275724697665607>. You **must be 18 or older**.\n" +
             "⠀▸ NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
             "**<:paw:1424057688492347509> ⠀Sharing Fanart**\n" +
             "⠀▸ Always link the **original source** when sharing fanart.\n" +
-            "⠀▸ **Generative AI art or content of any kind is not allowed** on this server.\n\n" +
+            "⠀▸ **Generative AI art or content of any kind is not allowed** in this server.\n\n" +
             "**<:paw:1424057688492347509> ⠀Use Appropriate Channels**\n" +
             "⠀▸ Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
             "⠀▸ To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
@@ -951,7 +951,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
+            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562>><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562>><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1040,6 +1040,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
