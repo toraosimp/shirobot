@@ -951,7 +951,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>\n",
+            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>\n⠀",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1040,6 +1040,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
