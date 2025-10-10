@@ -951,7 +951,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
+            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1040,6 +1040,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
