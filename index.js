@@ -300,26 +300,26 @@ const WELCOME_EMBEDS = [
         .setTitle("📜  Server Rules")
         .setDescription(
             "**1️⃣ Be Kind & Respectful**\n" +
-            "• Treat everyone with respect and friendliness.\n" +
-            "• Avoid being rude, harassment, or insulting other characters or ships.\n" +
-            "• Avoid excessive spamming.\n\n" +
+            "▪ Treat everyone with respect and friendliness.\n" +
+            "▪ Avoid being rude, harassment, or insulting other characters or ships.\n" +
+            "▪ Avoid excessive spamming.\n\n" +
             "**2️⃣ PG-13 & Suggestive Content**\n" +
-            "• This is a **PG-13 server**, so please keep any 18+ content or discussions stricly in the <#1422306500583624766> channel.\n" +
-            "• To access it, you can select the **18+ role** in <#1422275724697665607>. You **must be 18 or older**.\n" +
-            "• NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
+            "▪ This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
+            "▪ To access it, you can select the **18+ role** in <#1422275724697665607>. You **must be 18 or older**.\n" +
+            "▪ NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
             "**3️⃣ Sharing Fanart**\n" +
-            "• Always link the **original source** when sharing fanart.\n" +
-            "• **Generative AI art or content of any kind is not allowed** on this server.\n\n" +
+            "▪ Always link the **original source** when sharing fanart.\n" +
+            "▪ **Generative AI art or content of any kind is not allowed** on this server.\n\n" +
             "**4️⃣ Use Appropriate Channels**\n" +
-            "• Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
-            "• To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
+            "▪ Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
+            "▪ To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
             "**5️⃣ Consequences for Rule-Breaking**\n" +
-            "• Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
-            "• More than **3 warnings** will result in a ban.\n\n" +
+            "▪ Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
+            "▪ More than **3 warnings** will result in a ban.\n\n" +
             "**6️⃣ Questions & Suggestions**\n" +
-            "• If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
+            "▪ If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
             "**7️⃣ Have Fun!**\n" +
-            "• Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, enjoy ŹOOĻ.  <:paw:1424057688492347509>"
+            "▪ Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, enjoy ŹOOĻ.  <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -327,10 +327,10 @@ const WELCOME_EMBEDS = [
         .setTitle("<:booster:1426320353939947642>  Server Booster Perks")
         .setDescription(
             "**Boost the server and unlock special perks!**\n" +
-            "• Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\n" +
-            "• Gain **custom roles, titles, gradient role colors, and role icons** (once we unlock Level 2).\n" +
-            "• Your name will appear separately in the members list.\n" +
-            "• Boosting helps us maintain the **ŹOOĻ server tag**!"
+            "▪ Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\n" +
+            "▪ Gain **custom roles, titles, gradient role colors, and role icons** (once we unlock Level 2).\n" +
+            "▪ Your name will appear separately in the members list.\n" +
+            "▪ Boosting helps us maintain the **ŹOOĻ server tag**!"
         ),
     
     new EmbedBuilder()
@@ -338,24 +338,24 @@ const WELCOME_EMBEDS = [
         .setTitle("🤖  Our Custom Bots")
         .setDescription(
             "\n**ŹOOĻ Radio:**\n" +
-            "• Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\n" +
-            "• You can always see the song currently being played in the bot's status!\n" +
-            "• Use `z!help` to view commands.\n\n" +
+            "▪ Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\n" +
+            "▪ You can always see the song currently being played in the bot's status!\n" +
+            "▪ Use `z!help` to view commands.\n\n" +
             "**Shiro Utsugi (Me!):**\n" +
-            "• Mods use this bot to manage the server.\n" +
-            "• Members can use it to:\n" +
+            "▪ Mods use this bot to manage the server.\n" +
+            "▪ Members can use it to:\n" +
             "  • Set their birthday (wishes go out at 12 AM JST)\n" +
             "  • View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\n" +
             "  • Get song recommendations or dad jokes\n" +
-            "• Commands: `u!help`\n\n" +
+            "▪ Commands: `u!help`\n\n" +
             "**Moonlight Ichiro / Ryo Tsukumo:**\n" +
-            "• Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\n" +
-            "• Works in select channels only.\n" +
-            "• Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\n" +
-            "• Commands: `r!help`\n\n" +
+            "▪ Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\n" +
+            "▪ Works in select channels only.\n" +
+            "▪ Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\n" +
+            "▪ Commands: `r!help`\n\n" +
             "**Bot Issues or Suggestions**\n" +
-            "• If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\n" +
-            "• If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously too if you prefer, using the `?suggest [your suggestion]` command from any channel."
+            "▪ If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\n" +
+            "▪ If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously too if you prefer, using the `?suggest [your suggestion]` command from any channel."
         ),
     
     new EmbedBuilder()
@@ -597,7 +597,7 @@ async function handleListBirthdays(message) {
 
     let list = "**Birthdays:**\n";
     for (const [userId, data] of Object.entries(botData.birthdays)) {
-        list += `• ${data.username}: ${data.month}/${data.day}\n`;
+        list += `▪ ${data.username}: ${data.month}/${data.day}\n`;
     }
 
     message.reply(list);
@@ -653,7 +653,7 @@ async function handleListOccasions(message) {
         // Fallback to regular message if embed fails
         let list = "**Special Occasions:**\n";
         for (const occasion of SPECIAL_OCCASIONS) {
-            const line = `• ${occasion.date} - ${occasion.event}\n`;
+            const line = `▪ ${occasion.date} - ${occasion.event}\n`;
             if (list.length + line.length > 1900) {
                 await message.reply(list);
                 list = "";
@@ -926,7 +926,7 @@ async function handleHelp(message) {
                 inline: false,
             }
        )
-      .setFooter({ text: 'ŹOOĻ Management Bot • Created by pinkmagic (Sky)' })
+      .setFooter({ text: 'ŹOOĻ Management Bot ▪ Created by pinkmagic (Sky)' })
       .setTimestamp();
 
     message.reply({ embeds: [embed] });
@@ -951,7 +951,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "<:paw:1424057688492347509>  **Welcome to ŹOOĻ World Domination!**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun. To make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
+            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1040,6 +1040,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
