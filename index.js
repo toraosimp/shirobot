@@ -297,28 +297,28 @@ const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you en
 const WELCOME_EMBEDS = [
     new EmbedBuilder()
         .setColor("#8b8b8c")
-        .setTitle("📜 Server Rules")
+        .setTitle("# 📜 Server Rules")
         .setDescription(
-            "**1️⃣ Be Kind & Respectful**\n\n" +
+            "**1️⃣ Be Kind & Respectful**\n" +
             "• Treat everyone with respect and friendliness.\n" +
             "• Avoid being rude, harassment, or insulting other characters or ships.\n" +
             "• Avoid excessive spamming.\n\n" +
-            "**2️⃣ PG-13 & Suggestive Content**\n\n" +
+            "**2️⃣ PG-13 & Suggestive Content**\n" +
             "• This is a **PG-13 server**, so please keep any 18+ content or discussions stricly in the <#1422306500583624766> channel.\n" +
             "• To access it, you can select the **18+ role** in <#1422275724697665607>. You **must be 18 or older**.\n" +
             "• NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
-            "**3️⃣ Sharing Fanart**\n\n" +
+            "**3️⃣ Sharing Fanart**\n" +
             "• Always link the **original source** when sharing fanart.\n" +
             "• **Generative AI art or content of any kind is not allowed** on this server.\n\n" +
-            "**4️⃣ Use Appropriate Channels**\n\n" +
+            "**4️⃣ Use Appropriate Channels**\n" +
             "• Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
             "• To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
-            "**5️⃣ Consequences for Rule-Breaking**\n\n" +
+            "**5️⃣ Consequences for Rule-Breaking**\n" +
             "• Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
             "• More than **3 warnings** will result in a ban.\n\n" +
-            "**6️⃣ Questions & Suggestions**\n\n" +
+            "**6️⃣ Questions & Suggestions**\n" +
             "• If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
-            "**7️⃣ Have Fun!**\n\n" +
+            "**7️⃣ Have Fun!**\n" +
             "• Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, enjoy ŹOOĻ. <:paw:1424057688492347509>"
         ),
     
@@ -951,7 +951,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "<:paw:1424057688492347509> **Welcome to ŹOOĻ World Domination!**\n\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun. To make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n---",
+            content: "<:paw:1424057688492347509> **Welcome to ŹOOĻ World Domination!**\n\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun. To make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1040,4 +1040,5 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
