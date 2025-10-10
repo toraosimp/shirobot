@@ -297,7 +297,7 @@ const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you en
 const WELCOME_EMBEDS = [
     new EmbedBuilder()
         .setColor("#8b8b8c")
-        .setTitle("# 📜 Server Rules")
+        .setTitle("📜  Server Rules")
         .setDescription(
             "**1️⃣ Be Kind & Respectful**\n" +
             "• Treat everyone with respect and friendliness.\n" +
@@ -319,14 +319,14 @@ const WELCOME_EMBEDS = [
             "**6️⃣ Questions & Suggestions**\n" +
             "• If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
             "**7️⃣ Have Fun!**\n" +
-            "• Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, enjoy ŹOOĻ. <:paw:1424057688492347509>"
+            "• Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules! Lovely ŹOOĻ, enjoy ŹOOĻ.  <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
         .setColor("#8b8b8c")
-        .setTitle("<:nitroBoost_all:1426303976738918604> Server Booster Perks")
+        .setTitle("<:booster:1426320353939947642>  Server Booster Perks")
         .setDescription(
-            "**Boost the server and unlock special perks!**\n\n" +
+            "**Boost the server and unlock special perks!**\n" +
             "• Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\n" +
             "• Gain **custom roles, titles, gradient role colors, and role icons** (once we unlock Level 2).\n" +
             "• Your name will appear separately in the members list.\n" +
@@ -335,59 +335,59 @@ const WELCOME_EMBEDS = [
     
     new EmbedBuilder()
         .setColor("#8b8b8c")
-        .setTitle("🤖 Custom Bots")
+        .setTitle("🤖  Our Custom Bots")
         .setDescription(
-            "**ŹOOĻ Radio**\n\n" +
+            "\n**ŹOOĻ Radio:**\n" +
             "• Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\n" +
             "• You can always see the song currently being played in the bot's status!\n" +
-            "• Use `z!help` to view commands.\n\n\n" +
-            "**Shiro Utsugi (Me!)**\n\n" +
+            "• Use `z!help` to view commands.\n\n" +
+            "**Shiro Utsugi (Me!):**\n" +
             "• Mods use this bot to manage the server.\n" +
-            "• Members can use it to:\n\n" +
-            "  - Set their birthday (wishes go out at 12 AM JST)\n" +
-            "  - View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\n" +
-            "  - Get song recommendations or dad jokes\n" +
-            "• Commands: `u!help`\n\n\n" +
-            "**Moonlight Ichiro / Ryo Tsukumo**\n\n" +
+            "• Members can use it to:\n" +
+            "  • Set their birthday (wishes go out at 12 AM JST)\n" +
+            "  • View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\n" +
+            "  • Get song recommendations or dad jokes\n" +
+            "• Commands: `u!help`\n\n" +
+            "**Moonlight Ichiro / Ryo Tsukumo:**\n" +
             "• Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\n" +
             "• Works in select channels only.\n" +
             "• Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\n" +
-            "• Commands: `r!help`\n\n\n" +
-            "**Bot Issues or Suggestions**\n\n" +
+            "• Commands: `r!help`\n\n" +
+            "**Bot Issues or Suggestions**\n" +
             "• If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\n" +
-            "• If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously too if you prefer, using the `?suggest [your suggestion]` command."
+            "• If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously too if you prefer, using the `?suggest [your suggestion]` command from any channel."
         ),
     
     new EmbedBuilder()
         .setColor("#8b8b8c")
-        .setTitle("<:LETSEATME:1424190965715042365> Channels Overview")
+        .setTitle("<:LETSEATME:1424190965715042365>   Channels Overview")
         .setDescription(
-            "• <#1422311794382475284> — Greeting channel to welcome new members!\n" +
-            "• <#1421050879234281565> — Full server rules and explanations.\n" +
-            "• <#1422287272706965657> — Important server announcements.\n" +
-            "• <#1422287378353225909> — ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\n" +
-            "• <#1422275724697665607> — Pick your roles here. Server boosters can request custom roles from mods.\n" +
-            "• <#1422295153762107483> — Introductions channel! Use the pinned template if you like.\n" +
-            "• <#1422302452689932409>— Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n\n" +
-            "• <#1421050807989567509> — General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n" +
-            "• <#1422307723667574794> — Share fanart, merch, memes, and promotions.\n" +
-            "• <#1422310557863907360> — Talk about ŹOOĻ or i7 music.\n" +
-            "• <#1422312080534667325> — Discuss analyses, theories, and deep dives.\n" +
-            "• <#1422315968796823572> — Main story discussion (Parts 1-3 and anime).\n" +
-            "• <#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239> — Discussions for later parts. Get the roles for these channels from #roles to access them.\n" +
-            "• <#1422314877342711818> — Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\n" +
-            "• <#1422319489608974356> — Gameplay discussion, gacha pulls, etc.\n" +
-            "• <#1422312476208529438> — Ship discussions (Please keep it PG).\n" +
-            "• <#1422323857624268820> — Headcanons, AUs, fanfiction.\n" +
-            "• <#1422341311444418670> — Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
-            "• <#1422341971384471592> — Use bot commands here.\n\n\n" +
-            "**Character-Specific Channels (Sasagero -You Are Theirs- Category)**\n\n" +
-            "• Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n\n" +
-            "• <#1422338837073498162> — Non-i7 general discussions go here.\n" +
-            "• <#1422338927641235496> — Non-i7 related games, movies, shows, etc.\n" +
-            "• <#1422305834590929086> — Vent channel (requires Vent role; see pinned rules).\n\n\n" +
-            "• <#1422546276578496543> — Chat while in VC or control the ŹOOĻ Radio bot.\n" +
-            "• <#1422899506537566340> — Streaming events/watch parties channel."
+            "\n<#1422311794382475284> — Greeting channel to welcome new members!\n" +
+            "<#1421050879234281565> — Full server rules and explanations.\n" +
+            "<#1422287272706965657> — Important server announcements.\n" +
+            "<#1422287378353225909> — ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\n" +
+            "<#1422275724697665607> — Pick your roles here. Server boosters can request custom roles from mods.\n" +
+            "<#1422295153762107483> — Introductions channel! Use the pinned template if you like.\n" +
+            "<#1422302452689932409>— Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n" +
+            "<#1421050807989567509> — General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n" +
+            "<#1422307723667574794> — Share fanart, merch, memes, and promotions.\n" +
+            "<#1422310557863907360> — Talk about ŹOOĻ or i7 music.\n" +
+            "<#1422312080534667325> — Discuss analyses, theories, and deep dives.\n" +
+            "<#1422315968796823572> — Main story discussion (Parts 1-3 and anime).\n" +
+            "<#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239> — Discussions for later parts. Get the roles for these channels from #roles to access them.\n" +
+            "<#1422314877342711818> — Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\n" +
+            "<#1422319489608974356> — Gameplay discussion, gacha pulls, etc.\n" +
+            "<#1422312476208529438> — Ship discussions (Please keep it PG).\n" +
+            "<#1422323857624268820> — Headcanons, AUs, fanfiction.\n" +
+            "<#1422341311444418670> — Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
+            "<#1422341971384471592> — Use bot commands here.\n\n" +
+            "**Character-Specific Channels (Sasagero -You Are Theirs- Category)**\n" +
+            "Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n" +
+            "<#1422338837073498162> — Non-i7 general discussions go here.\n" +
+            "<#1422338927641235496> — Non-i7 related games, movies, shows, etc.\n" +
+            "<#1422305834590929086> — Vent channel (requires Vent role; see pinned rules).\n\n" +
+            "<#1422546276578496543> — Chat while in VC or control the ŹOOĻ Radio bot.\n" +
+            "<#1422899506537566340> — Streaming events/watch parties channel."
         )
 ];
 
@@ -951,7 +951,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "<:paw:1424057688492347509> **Welcome to ŹOOĻ World Domination!**\n\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun. To make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
+            content: "<:paw:1424057688492347509>  **Welcome to ŹOOĻ World Domination!**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun. To make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1040,5 +1040,6 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
