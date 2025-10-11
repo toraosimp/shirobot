@@ -382,9 +382,9 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>⠀ <#1426366299549728900>:  Talk about your yumeships here!\n" +
             "<:paw:1424057688492347509>⠀ <#1422323857624268820>:  Headcanons, AUs, fanfiction.\n" +
             "<:paw:1424057688492347509>⠀ <#1422341311444418670>:  Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422341971384471592>:  Use bot commands here.\n•···········································•···········································•\n\n" +
+            "<:paw:1424057688492347509>⠀ <#1422341971384471592>:  Use bot commands here.\n\n" +
             "<:paw:1424057688492347509>⠀ **Character-Specific Channels (Sasagero -You Are Theirs- Category)**\n" +
-            "▸  Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n" +
+            "▸   Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n" +
             "<:paw:1424057688492347509>⠀ <#1422338837073498162>:  Non-i7 general discussions go here.\n" +
             "<:paw:1424057688492347509>⠀ <#1422338927641235496>:  Non-i7 related games, movies, shows, etc.\n" +
             "<:paw:1424057688492347509>⠀ <#1422305834590929086>:  Vent channel (requires Vent role; see pinned rules).\n\n" +
@@ -1042,6 +1042,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
