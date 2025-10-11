@@ -362,15 +362,15 @@ const WELCOME_EMBEDS = [
         .setColor("b3a28d")
         .setTitle("<:minaheart:1424206043268911154>⠀ Channels Overview⠀ <:snakenami:1424205913245356144>")
         .setDescription(
-            "<:paw:1424057688492347509>⠀ <#1422311794382475284>:  Greeting channel to welcome new members!\n•·················•·················•\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050879234281565>:  Full server rules and server booster perks.\n•·················•·················•\n" +
-            "<:paw:1424057688492347509>⠀ <#1426359257430753310>:  A guide to the custom bots and all the channels in this server.\n•·················•·················•\n" +
-            "<:paw:1424057688492347509>⠀ <#1422287272706965657>:  Important server announcements.\n•·················•·················•\n" +
-            "<:paw:1424057688492347509>⠀ <#1422287378353225909>:  ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\n•·················•·················•\n" +
-            "<:paw:1424057688492347509>⠀ <#1422275724697665607>:  Pick your roles here. Server boosters can request custom roles from mods.\n•·················•·················•\n" +
-            "<:paw:1424057688492347509>⠀ <#1422295153762107483>:  Introductions channel! Use the pinned template if you like.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422302452689932409>:  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:  General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422311794382475284>:  Greeting channel to welcome new members!\n•······························•······························•\n" +
+            "<:paw:1424057688492347509>⠀ <#1421050879234281565>:  Full server rules and server booster perks.\n•······························•······························•\n" +
+            "<:paw:1424057688492347509>⠀ <#1426359257430753310>:  A guide to the custom bots and all the channels in this server.\n•······························•······························•\n" +
+            "<:paw:1424057688492347509>⠀ <#1422287272706965657>:  Important server announcements.\n•······························•······························•\n" +
+            "<:paw:1424057688492347509>⠀ <#1422287378353225909>:  ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.•······························•······························•" +
+            "<:paw:1424057688492347509>⠀ <#1422275724697665607>:  Pick your roles here. Server boosters can request custom roles from mods.•······························•······························•" +
+            "<:paw:1424057688492347509>⠀ <#1422295153762107483>:  Introductions channel! Use the pinned template if you like.•······························•······························•" +
+            "<:paw:1424057688492347509>⠀ <#1422302452689932409>:  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n•······························•······························•\n\n" +
+            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:  General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n•······························•······························•\n" +
             "<:paw:1424057688492347509>⠀ <#1422307723667574794>:  Share fanart, merch, memes, and promotions.\n" +
             "<:paw:1424057688492347509>⠀ <#1422310557863907360>:  Talk about ŹOOĻ or i7 music.\n" +
             "<:paw:1424057688492347509>⠀ <#1422312080534667325>:  Discuss analyses, theories, and deep dives.\n" +
@@ -1042,6 +1042,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
