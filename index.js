@@ -300,26 +300,26 @@ const WELCOME_EMBEDS = [
         .setTitle("<:haruheart:1424206041020891226>⠀ Server Rules⠀ <:boaruka:1424203440883630201>")
         .setDescription(
             "**<:paw:1424057688492347509>⠀ Be Kind & Respectful**\n" +
-            "▸  Treat everyone with respect and friendliness.\n" +
-            "▸  Avoid being rude, harassment, or insulting other characters or ships.\n" +
-            "▸  Avoid excessive spamming.\n\n" +
+            "▸    Treat everyone with respect and friendliness.\n" +
+            "▸    Avoid being rude, harassment, or insulting other characters or ships.\n" +
+            "▸    Avoid excessive spamming.\n\n" +
             "**<:paw:1424057688492347509> ⠀PG-13 & Suggestive Content**\n" +
-            "▸  This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
-            "▸  To access it, you can select the <@&1422307305806106724> in <#1422275724697665607>. You **must be 18 or older**.\n" +
-            "▸  NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
+            "▸    This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
+            "▸    To access it, you can select the <@&1422307305806106724> in <#1422275724697665607>. You **must be 18 or older**.\n" +
+            "▸    NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
             "**<:paw:1424057688492347509> ⠀Sharing Fanart**\n" +
-            "▸  Always link the **original source** when sharing fanart.\n" +
-            "▸  **Generative AI art or content of any kind is not allowed** in this server.\n\n" +
+            "▸    Always link the **original source** when sharing fanart.\n" +
+            "▸    **Generative AI art or content of any kind is not allowed** in this server.\n\n" +
             "**<:paw:1424057688492347509> ⠀Use Appropriate Channels**\n" +
-            "▸  Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
-            "▸  To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
+            "▸    Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
+            "▸    To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
             "**<:paw:1424057688492347509> ⠀Consequences for Rule-Breaking**\n" +
-            "▸  Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
-            "▸  More than **3 warnings** will result in a ban.\n\n" +
+            "▸    Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
+            "▸    More than **3 warnings** will result in a ban.\n\n" +
             "**<:paw:1424057688492347509> ⠀Questions & Suggestions**\n" +
-            "▸  If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
+            "▸    If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
             "**<:paw:1424057688492347509> ⠀Have Fun!**\n" +
-            "▸  Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules!\n\nLovely ŹOOĻ, Enjoy ŹOOĻ.  <:paw:1424057688492347509>"
+            "▸    Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules!\n\nLovely ŹOOĻ, Enjoy ŹOOĻ.  <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -334,60 +334,61 @@ const WELCOME_EMBEDS = [
         ),
     
     new EmbedBuilder()
-        .setColor("#b3a28d")
-        .setTitle("<:minaheart:1424206043268911154>⠀ Our Custom Bots⠀ <:snakenami:1424205913245356144>")
+        .setColor("8f7577")
+        .setTitle("<:toraheart:1424206045823369256>⠀ Our Custom Bots⠀ <:tigerao:1424205920476598363>")
         .setDescription(
             "<:paw:1424057688492347509>⠀ **ŹOOĻ Radio:**\n" +
-            "▸  Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\n" +
-            "▸  You can always see the song currently being played in the bot's status!\n" +
-            "▸  Use `z!help` to view commands.\n\n" +
+            "▸      Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\n" +
+            "▸      You can always see the song currently being played in the bot's status!\n" +
+            "▸      Use `z!help` to view commands.\n\n" +
             "<:paw:1424057688492347509>⠀ **Shiro Utsugi (Me!):**\n" +
-            "▸  Mods use this bot to manage the server.\n" +
-            "▸  Members can use it to:\n" +
-            "  ▸   Set their birthday (wishes go out at 12 AM JST)\n" +
-            "  ▸   View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\n" +
-            "  ▸   Get song recommendations or dad jokes\n" +
-            "▸  Commands: `u!help`\n\n" +
+            "▸      Mods use this bot to manage the server.\n" +
+            "▸      Members can use it to:\n" +
+            "    ▸      Set their birthday (wishes go out at 12 AM JST)\n" +
+            "    ▸      View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\n" +
+            "    ▸      Get song recommendations or dad jokes\n" +
+            "▸      Commands: `u!help`\n\n" +
             "<:paw:1424057688492347509>⠀ **Moonlight Ichiro / Ryo Tsukumo:**\n" +
-            "▸  Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\n" +
-            "▸  Works in select channels only.\n" +
-            "▸  Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\n" +
-            "▸  Commands: `r!help`\n\n" +
+            "▸      Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\n" +
+            "▸      Works in select channels only.\n" +
+            "▸      Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\n" +
+            "▸      Commands: `r!help`\n\n" +
             "<:paw:1424057688492347509>⠀ **Bot Issues or Suggestions**\n" +
-            "▸  If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\n" +
-            "▸  If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously, if you prefer, using the `?suggest [your suggestion]` command from any channel."
+            "▸      If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\n" +
+            "▸      If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously, if you prefer, using the `?suggest [your suggestion]` command from any channel."
         ),
     
     new EmbedBuilder()
-        .setColor("8f7577")
-        .setTitle("<:toraheart:1424206045823369256>⠀ Channels Overview⠀ <:tigerao:1424205920476598363>")
+        .setColor("b3a28d")
+        .setTitle("<:minaheart:1424206043268911154>⠀ Channels Overview⠀ <:snakenami:1424205913245356144>")
         .setDescription(
-            "<:paw:1424057688492347509>⠀ <#1422311794382475284>:\n▸  Greeting channel to welcome new members!\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050879234281565>:\n▸  Full server rules and explanations.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422287272706965657>:\n▸  Important server announcements.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422287378353225909>:\n▸  ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422275724697665607>:\n▸  Pick your roles here. Server boosters can request custom roles from mods.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422295153762107483>:\n▸  Introductions channel! Use the pinned template if you like.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422302452689932409>:\n▸  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:\n▸  General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422307723667574794>:\n▸  Share fanart, merch, memes, and promotions.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422310557863907360>:\n▸  Talk about ŹOOĻ or i7 music.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422312080534667325>:\n▸  Discuss analyses, theories, and deep dives.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422315968796823572>:\n▸  Main story discussion (Parts 1-3 and anime).\n" +
-            "<:paw:1424057688492347509>⠀ <#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239>:\n▸  Discussions for later parts. Get the roles for these channels from #roles to access them.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422314877342711818>:\n▸  Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422319489608974356>:\n▸  Gameplay discussion, gacha pulls, etc.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422312476208529438>:\n▸  Ship discussions (Please keep it PG). Ships that include incest or a large age gap between a minor and an adult are not allowed here!\n" +
-            "<:paw:1424057688492347509>⠀ <#1422323857624268820>:\n▸  Headcanons, AUs, fanfiction.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422341311444418670>:\n▸  Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422341971384471592>:\n▸  Use bot commands here.\n\n" +
+            "<:paw:1424057688492347509>⠀ <#1422311794382475284>:\n▸    Greeting channel to welcome new members!\n" +
+            "<:paw:1424057688492347509>⠀ <#1421050879234281565>:\n▸    Full server rules and server booster perks.\n" +
+            "<:paw:1424057688492347509>⠀ <#1426359257430753310>:\n▸    A guide to the custom bots and all the channels in this server.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422287272706965657>:\n▸    Important server announcements.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422287378353225909>:\n▸    ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422275724697665607>:\n▸    Pick your roles here. Server boosters can request custom roles from mods.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422295153762107483>:\n▸    Introductions channel! Use the pinned template if you like.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422302452689932409>:\n▸    Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n" +
+            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:\n▸    General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422307723667574794>:\n▸    Share fanart, merch, memes, and promotions.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422310557863907360>:\n▸    Talk about ŹOOĻ or i7 music.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422312080534667325>:\n▸    Discuss analyses, theories, and deep dives.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422315968796823572>:\n▸    Main story discussion (Parts 1-3 and anime).\n" +
+            "<:paw:1424057688492347509>⠀ <#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239>:\n▸    Discussions for later parts. Get the roles for these channels from #roles to access them.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422314877342711818>:\n▸    Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422319489608974356>:\n▸    Gameplay discussion, gacha pulls, etc.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422312476208529438>:\n▸    Ship discussions (Please keep it PG). Ships that include incest or a large age gap between a minor and an adult are not allowed here!\n" +
+            "<:paw:1424057688492347509>⠀ <#1422323857624268820>:\n▸    Headcanons, AUs, fanfiction.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422341311444418670>:\n▸    Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422341971384471592>:\n▸    Use bot commands here.\n\n" +
             "<:paw:1424057688492347509>⠀ **Character-Specific Channels (Sasagero -You Are Theirs- Category)**\n" +
-            "▸  Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1422338837073498162>:\n▸  Non-i7 general discussions go here.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422338927641235496>:\n▸  Non-i7 related games, movies, shows, etc.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422305834590929086>:\n▸  Vent channel (requires Vent role; see pinned rules).\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1422546276578496543>:\n▸  Chat while in VC or control the ŹOOĻ Radio bot here.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422899506537566340>:\n▸  Streaming events/watch parties chat."
+            "▸    Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n" +
+            "<:paw:1424057688492347509>⠀ <#1422338837073498162>:\n▸    Non-i7 general discussions go here.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422338927641235496>:\n▸    Non-i7 related games, movies, shows, etc.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422305834590929086>:\n▸    Vent channel (requires Vent role; see pinned rules).\n\n" +
+            "<:paw:1424057688492347509>⠀ <#1422546276578496543>:\n▸    Chat while in VC or control the ŹOOĻ Radio bot here.\n" +
+            "<:paw:1424057688492347509>⠀ <#1422899506537566340>:\n▸    Streaming events/watch parties chat."
         )
 ];
 
@@ -1040,6 +1041,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
