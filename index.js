@@ -379,6 +379,7 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>⠀ <#1422314877342711818>:\n▸    Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\n" +
             "<:paw:1424057688492347509>⠀ <#1422319489608974356>:\n▸    Gameplay discussion, gacha pulls, etc.\n" +
             "<:paw:1424057688492347509>⠀ <#1422312476208529438>:\n▸    Ship discussions (Please keep it PG). Ships that include incest or a large age gap between a minor and an adult are not allowed here!\n" +
+            "<:paw:1424057688492347509>⠀ <#1426366299549728900>:\n▸    Talk about your yumeships here!\n" +
             "<:paw:1424057688492347509>⠀ <#1422323857624268820>:\n▸    Headcanons, AUs, fanfiction.\n" +
             "<:paw:1424057688492347509>⠀ <#1422341311444418670>:\n▸    Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
             "<:paw:1424057688492347509>⠀ <#1422341971384471592>:\n▸    Use bot commands here.\n\n" +
@@ -1041,6 +1042,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
