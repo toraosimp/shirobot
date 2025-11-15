@@ -346,7 +346,7 @@ const WELCOME_EMBEDS = [
     
     new EmbedBuilder()
         .setColor("#771e2f")
-        .setTitle("<:tomaheart:1424206048226578562>⠀ <:booster:1426343756608573552> Server Booster Perks <:booster:1426343756608573552>⠀ <:dogmaru:1424205918098428100>")
+        .setTitle("<:tomaheart:1424206048226578562>⠀ <:booster:1439371744375996527> Server Booster Perks <:booster:1439371744375996527>⠀ <:dogmaru:1424205918098428100>")
         .setDescription(
             "**Boost the server and unlock special perks!**\n" +
             "<:paw:1424057688492347509>⠀ Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\n" +
@@ -1064,6 +1064,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
