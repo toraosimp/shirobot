@@ -310,7 +310,7 @@ const WELCOME_EMBEDS = [
 "▸    Do not share graphic, disturbing, or overly sensitive content in public channels.\n" +
 "▸    If you need to talk about something sensitive, please move to the <#1422305834590929086> channel **after reading its rules**.\n\n" +
 
-"**<:paw:1424057688492347509>⠀ Ships & Boundaries**\n" +
+"**<:paw:1424057688492347509>⠀ Ships**\n" +
 "▸    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\n" +
 "▸    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŹOOĻ are popular, and this is a ŹOOĻ server after all! We want this to remain a space where everyone feels welcome and comfortable.\n" +
 "▸    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\n" +
@@ -1064,6 +1064,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
