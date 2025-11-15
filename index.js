@@ -299,27 +299,49 @@ const WELCOME_EMBEDS = [
         .setColor("#90ab9e")
         .setTitle("<:haruheart:1424206041020891226>⠀ Server Rules⠀ <:boaruka:1424203440883630201>")
         .setDescription(
-            "**<:paw:1424057688492347509>⠀ Be Kind & Respectful**\n" +
-            "▸    Treat everyone with respect and friendliness.\n" +
-            "▸    Avoid rudeness, harassment, or insulting others’ favorite characters or ships.\n" +
-            "▸    Please refrain from excessive spamming.\n\n" +
-            "**<:paw:1424057688492347509> ⠀PG-13 & Suggestive Content**\n" +
-            "▸    This is a **PG-13 server**, so please keep any 18+ content or discussions strictly in the <#1422306500583624766> channel.\n" +
-            "▸    To access it, you can select the <@&1422307305806106724> in <#1422275724697665607>. You **must be 18 or older**.\n" +
-            "▸    NSFW art or links must always be **spoiler-tagged** and include a brief description. Explicit pornographic content is not allowed in this server. \n\n" +
-            "**<:paw:1424057688492347509> ⠀Sharing Fanart**\n" +
-            "▸    Always link the **original source** when sharing fanart.\n" +
-            "▸    **Generative AI art or content of any kind is not allowed** in this server.\n\n" +
-            "**<:paw:1424057688492347509> ⠀Use Appropriate Channels**\n" +
-            "▸    Respect channel purposes to avoid spoiling content for anime-only members or those who aren't caught up.\n" +
-            "▸    To discuss main story content beyond Part 3, please use the designated channels for Parts 4, 5, 6, and beyond accordingly.\n\n" +
-            "**<:paw:1424057688492347509> ⠀Consequences for Rule-Breaking**\n" +
-            "▸    Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
-            "▸    More than **3 warnings** will result in a ban.\n\n" +
-            "**<:paw:1424057688492347509> ⠀Questions & Suggestions**\n" +
-            "▸    If you ever have questions, concerns, or suggestions, don't hesitate to contact a mod. We're always happy to help!\n\n" +
-            "**<:paw:1424057688492347509> ⠀Have Fun!**\n" +
-            "▸    Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules!\n\nLovely ŹOOĻ, Enjoy ŹOOĻ.  <:paw:1424057688492347509>"
+            "**<:paw:1424057688492347509>⠀ Be Kind, Respectful & Compassionate**\n" +
+"▸    Treat everyone with kindness, respect, and empathy.\n" +
+"▸    Do not be dismissive, rude, or condescending toward others.\n" +
+"▸    While casual profanity is allowed, **derogatory or targeted insults toward any user are strictly prohibited**.\n" +
+"▸    Please remember that there are **minors** in this server.\n" +
+"▸    Avoid excessive spamming.\n\n" +
+
+"**<:paw:1424057688492347509>⠀ Sensitive & Uncomfortable Topics**\n" +
+"▸    Do not share graphic, disturbing, or overly sensitive content in public channels.\n" +
+"▸    If you need to talk about something sensitive, please move to the <#vent> channel **after reading its rules**.\n\n" +
+
+"**<:paw:1424057688492347509>⠀ Ships & Boundaries**\n" +
+"▸    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) are not allowed here.\n" +
+"▸    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŹOOĻ are popular, and this is a ŹOOĻ server after all! We want this to remain a space where everyone feels welcome and comfortable.\n" +
+"▸    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that any discussion of these ships be kept private — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\n" +
+"▸    Conversations about their dynamics that **do not frame them romantically** are perfectly fine.\n" +
+"▸    Thank you for your understanding and helping us maintain a comfortable space for everyone!\n\n" +
+
+"**<:paw:1424057688492347509> ⠀PG-13 & Suggestive Content**\n" +
+"▸    This is a **PG-13 server**, so keep any 18+ discussions in <#1422306500583624766> only.\n" +
+"▸    To access it, assign yourself the <@&1422307305806106724> role in <#1422275724697665607>. You **must be 18+**.\n" +
+"▸    NSFW art or links must always be **spoiler-tagged** with a short description.\n" +
+"▸    Explicit pornographic content is not allowed anywhere in this server.\n\n" +
+
+"**<:paw:1424057688492347509> ⠀Sharing Fanart**\n" +
+"▸    Always link the **original source** when sharing fanart.\n" +
+"▸    **Generative AI art or AI-based content is not allowed**.\n\n" +
+
+"**<:paw:1424057688492347509> ⠀Use Appropriate Channels**\n" +
+"▸    Respect channel purposes to avoid spoiling content for anime-only or not-yet-caught-up members.\n" +
+"▸    Please make sure to always read the channels' descriptions and check out the pinned messages!\n" +
+"▸    For main story discussions beyond Part 3, please use the designated channels for Parts 4, 5, 6, and onward.\n\n" +
+
+"**<:paw:1424057688492347509> ⠀Consequences for Rule-Breaking**\n" +
+"▸    Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
+"▸    More than **3 warnings** will result in a ban.\n\n" +
+
+"**<:paw:1424057688492347509> ⠀Questions & Suggestions**\n" +
+"▸    If you have questions, concerns, or suggestions, feel free to contact a mod — we’re always happy to help!\n\n" +
+
+"**<:paw:1424057688492347509> ⠀Have Fun!**\n" +
+"▸    Enjoy your time in the server and express your love for ŹOOĻ to your heart’s content — as long as you follow the rules!\n\n" +
+"Lovely ŹOOĻ, Enjoy ŹOOĻ. <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -370,7 +392,7 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>⠀ <#1422275724697665607>:  Pick your roles here. Server boosters can request custom roles from mods.\n" +
             "<:paw:1424057688492347509>⠀ <#1422295153762107483>:  Introductions channel! Use the pinned template if you like.\n" +
             "<:paw:1424057688492347509>⠀ <#1422302452689932409>:  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:  General chat about anything ŹOOĻ/i7 related. You can talk about parts 1-3 without spoiler tags, but keep longer discussions in the #main-story-content channel.\n" +
+            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:  General chat meant for ZOOL/i7 discussions that don’t fall under any specific channel. If a dedicated channel exists for your topic, please move extended conversations there. Light off-topic chat is fine, but we kindly ask everyone to use the appropriate channels whenever possible. You can talk about parts 1-3 here without spoiler tags, but please keep longer discussions in the #main-story-content channel.\n" +
             "<:paw:1424057688492347509>⠀ <#1422307723667574794>:  Share fanart, merch, memes, and promotions.\n" +
             "<:paw:1424057688492347509>⠀ <#1422310557863907360>:  Talk about ŹOOĻ or i7 music.\n" +
             "<:paw:1424057688492347509>⠀ <#1422312080534667325>:  Discuss analyses, theories, and deep dives.\n" +
@@ -1042,6 +1064,7 @@ async function sendBirthdayMessage(userId) {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
