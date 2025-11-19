@@ -1,8 +1,9 @@
 const express = require("express");
-const { Client, GatewayIntentBits, PermissionsBitField, EmbedBuilder, ActivityType } = require("discord.js");
+const { Client, GatewayIntentBits, PermissionsBitField, EmbedBuilder, ActivityType, AttachmentBuilder } = require("discord.js");
 const cron = require("node-cron");
 const moment = require("moment-timezone");
 const fs = require("fs").promises;
+const path = require("path");
 
 const app = express();
 app.get("/", (req, res) => res.send("Bot is running!"));
@@ -260,7 +261,7 @@ const SPECIAL_OCCASIONS = [
     { date: "06/08", event: "Natsume-san's birthday" },
     { date: "11/29", event: "Inumaru-san's birthday" },
     { date: "12/06", event: "Isumi-san's birthday" },
-    { date: "08/31", event: "ŹOOĻ's anniversary!" },
+    { date: "08/31", event: "ŦOOŦ's anniversary!" },
     { date: "08/24", event: "My birthday 😅" },
     { date: "09/09", event: "Ryo-kun's birthday" },
     { date: "01/17", event: "President Takanashi's birthday" },
@@ -284,8 +285,8 @@ const SPECIAL_OCCASIONS = [
     { date: "10/12", event: "Tsunashi-san's birthday" },
     { date: "11/11", event: "Momo-san's birthday" },
     { date: "11/25", event: "einsatZ release anniversary" },
-    { date: "12/06", event: "Źquare release anniversary" },
-    { date: "12/14", event: "Źenit release anniversary" },
+    { date: "12/06", event: "Ŧquare release anniversary" },
+    { date: "12/14", event: "Ŧenit release anniversary" },
     { date: "12/24", event: "Yuki-san's birthday" },
 ];
 
@@ -297,121 +298,121 @@ const WELCOME_MESSAGE = "Hello and welcome to the server, {user}! We hope you en
 const WELCOME_EMBEDS = [
     new EmbedBuilder()
         .setColor("#90ab9e")
-        .setTitle("<:haruheart:1424206041020891226>⠀ Server Rules⠀ <:boaruka:1424203440883630201>")
+        .setTitle("<:haruheart:1424206041020891226>\u2800 Server Rules\u2800 <:boaruka:1424203440883630201>")
         .setDescription(
-            "**<:paw:1424057688492347509>⠀ Be Kind, Respectful & Compassionate**\n" +
-"▸    Treat everyone with kindness, respect, and empathy.\n" +
-"▸    Do not be dismissive, rude, or condescending toward others.\n" +
-"▸    While casual profanity is allowed, **derogatory or targeted insults toward any user are strictly prohibited**.\n" +
-"▸    Please remember that there are **minors** in this server.\n" +
-"▸    Avoid excessive spamming.\n\n" +
+            "**<:paw:1424057688492347509>\u2800 Be Kind, Respectful & Compassionate**\\n" +
+            "\u25b8    Treat everyone with kindness, respect, and empathy.\\n" +
+            "\u25b8    Do not be dismissive, rude, or condescending toward others.\\n" +
+            "\u25b8    While casual profanity is allowed, **derogatory or targeted insults toward any user are strictly prohibited**.\\n" +
+            "\u25b8    Please remember that there are **minors** in this server.\\n" +
+            "\u25b8    Avoid excessive spamming.\\n\\n" +
 
-"**<:paw:1424057688492347509>⠀ Sensitive & Uncomfortable Topics**\n" +
-"▸    Do not share graphic, disturbing, or overly sensitive content in public channels.\n" +
-"▸    If you need to talk about something sensitive, please move to the <#1422305834590929086> channel **after reading its rules**.\n\n" +
+            "**<:paw:1424057688492347509>\u2800 Sensitive & Uncomfortable Topics**\\n" +
+            "\u25b8    Do not share graphic, disturbing, or overly sensitive content in public channels.\\n" +
+            "\u25b8    If you need to talk about something sensitive, please move to the <#1422305834590929086> channel **after reading its rules**.\\n\\n" +
 
-"**<:paw:1424057688492347509>⠀ Ships**\n" +
-"▸    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\n" +
-"▸    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŹOOĻ are popular, and this is a ŹOOĻ server after all! We want this to remain a space where everyone feels welcome and comfortable.\n" +
-"▸    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\n" +
-"▸    Conversations about their dynamics that do not frame them romantically are perfectly fine.\n" +
-"▸    Thank you for your understanding and helping us maintain a comfortable space for everyone!\n\n" +
+            "**<:paw:1424057688492347509>\u2800 Ships**\\n" +
+            "\u25b8    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\\n" +
+            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŦOOŦ are popular, and this is a ŦOOŦ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
+            "\u25b8    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\\n" +
+            "\u25b8    Conversations about their dynamics that do not frame them romantically are perfectly fine.\\n" +
+            "\u25b8    Thank you for your understanding and helping us maintain a comfortable space for everyone!\\n\\n" +
 
-"**<:paw:1424057688492347509> ⠀PG-13 & Suggestive Content**\n" +
-"▸    This is a **PG-13 server**, so keep any 18+ discussions in <#1422306500583624766> only.\n" +
-"▸    To access it, assign yourself the <@&1422307305806106724> role in <#1422275724697665607>. You **must be 18+**.\n" +
-"▸    NSFW art or links must always be **spoiler-tagged** with a short description.\n" +
-"▸    Explicit pornographic content is not allowed anywhere in this server.\n\n" +
+            "**<:paw:1424057688492347509> \u2800PG-13 & Suggestive Content**\\n" +
+            "\u25b8    This is a **PG-13 server**, so keep any 18+ discussions in <#1422306500583624766> only.\\n" +
+            "\u25b8    To access it, assign yourself the <@&1422307305806106724> role in <#1422275724697665607>. You **must be 18+**.\\n" +
+            "\u25b8    NSFW art or links must always be **spoiler-tagged** with a short description.\\n" +
+            "\u25b8    Explicit pornographic content is not allowed anywhere in this server.\\n\\n" +
 
-"**<:paw:1424057688492347509> ⠀Sharing Fanart**\n" +
-"▸    Always link the **original source** when sharing fanart.\n" +
-"▸    **Generative AI art or AI-based content is not allowed**.\n\n" +
+            "**<:paw:1424057688492347509> \u2800Sharing Fanart**\\n" +
+            "\u25b8    Always link the **original source** when sharing fanart.\\n" +
+            "\u25b8    **Generative AI art or AI-based content is not allowed**.\\n\\n" +
 
-"**<:paw:1424057688492347509> ⠀Use Appropriate Channels**\n" +
-"▸    Respect channel purposes to avoid spoiling content for anime-only or not-yet-caught-up members.\n" +
-"▸    Please make sure to always read the channels' descriptions and check out the pinned messages!\n" +
-"▸    For main story discussions beyond Part 3, please use the designated channels for Parts 4, 5, 6, and onward.\n\n" +
+            "**<:paw:1424057688492347509> \u2800Use Appropriate Channels**\\n" +
+            "\u25b8    Respect channel purposes to avoid spoiling content for anime-only or not-yet-caught-up members.\\n" +
+            "\u25b8    Please make sure to always read the channels' descriptions and check out the pinned messages!\\n" +
+            "\u25b8    For main story discussions beyond Part 3, please use the designated channels for Parts 4, 5, 6, and onward.\\n\\n" +
 
-"**<:paw:1424057688492347509> ⠀Consequences for Rule-Breaking**\n" +
-"▸    Rule violations may result in **warnings or immediate bans**, depending on severity.\n" +
-"▸    More than **3 warnings** will result in a ban.\n\n" +
+            "**<:paw:1424057688492347509> \u2800Consequences for Rule-Breaking**\\n" +
+            "\u25b8    Rule violations may result in **warnings or immediate bans**, depending on severity.\\n" +
+            "\u25b8    More than **3 warnings** will result in a ban.\\n\\n" +
 
-"**<:paw:1424057688492347509> ⠀Questions & Suggestions**\n" +
-"▸    If you have questions, concerns, or suggestions, feel free to contact a mod — we’re always happy to help!\n\n" +
+            "**<:paw:1424057688492347509> \u2800Questions & Suggestions**\\n" +
+            "\u25b8    If you have questions, concerns, or suggestions, feel free to contact a mod — we're always happy to help!\\n\\n" +
 
-"**<:paw:1424057688492347509> ⠀Have Fun!**\n" +
-"▸    Enjoy your time in the server and express your love for ŹOOĻ to your heart’s content — as long as you follow the rules!\n\n" +
-"Lovely ŹOOĻ, Enjoy ŹOOĻ. <:paw:1424057688492347509>"
+            "**<:paw:1424057688492347509> \u2800Have Fun!**\\n" +
+            "\u25b8    Enjoy your time in the server and express your love for ŦOOŦ to your heart's content — as long as you follow the rules!\\n\\n" +
+            "Lovely ŦOOŦ, Enjoy ŦOOŦ. <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
         .setColor("#771e2f")
-        .setTitle("<:tomaheart:1424206048226578562>⠀ <:booster:1439371744375996527> Server Booster Perks <:booster:1439371744375996527>⠀ <:dogmaru:1424205918098428100>")
+        .setTitle("<:tomaheart:1424206048226578562>\u2800 <:booster:1439371744375996527> Server Booster Perks <:booster:1439371744375996527>\u2800 <:dogmaru:1424205918098428100>")
         .setDescription(
-            "**Boost the server and unlock special perks!**\n" +
-            "<:paw:1424057688492347509>⠀ Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\n" +
-            "<:paw:1424057688492347509>⠀ Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\n" +
-            "<:paw:1424057688492347509>⠀ Server Boosters appear separately in the members list.\n" +
-            "<:paw:1424057688492347509>⠀ Boosting also helps us maintain the **ŹOOĻ server tag**!"
+            "**Boost the server and unlock special perks!**\\n" +
+            "<:paw:1424057688492347509>\u2800 Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\\n" +
+            "<:paw:1424057688492347509>\u2800 Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\\n" +
+            "<:paw:1424057688492347509>\u2800 Server Boosters appear separately in the members list.\\n" +
+            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŦOOŦ server tag**!"
         ),
     
     new EmbedBuilder()
         .setColor("8f7577")
-        .setTitle("<:toraheart:1424206045823369256>⠀ Our Custom Bots⠀ <:tigerao:1424205920476598363>")
+        .setTitle("<:toraheart:1424206045823369256>\u2800 Our Custom Bots\u2800 <:tigerao:1424205920476598363>")
         .setDescription(
-            "<:paw:1424057688492347509>⠀ **ŹOOĻ Radio:**\n" +
-            "▸      Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\n" +
-            "▸      You can always see the song currently being played in the bot's status!\n" +
-            "▸      Use `z!help` to view commands.\n\n" +
-            "<:paw:1424057688492347509>⠀ **Shiro Utsugi (Me!):**\n" +
-            "▸      Mods use this bot to manage the server.\n" +
-            "▸      Members can use it to:\n" +
-            "      ▸     Set their birthday (wishes go out at 12 AM JST)\n" +
-            "      ▸     View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\n" +
-            "      ▸     Get song recommendations or dad jokes\n" +
-            "▸      Commands: `u!help`\n\n" +
-            "<:paw:1424057688492347509>⠀ **Moonlight Ichiro / Ryo Tsukumo:**\n" +
-            "▸      Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\n" +
-            "▸      Works in select channels only.\n" +
-            "▸      Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\n" +
-            "▸      Commands: `r!help`\n\n" +
-            "<:paw:1424057688492347509>⠀ **Bot Issues or Suggestions**\n" +
-            "▸      If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\n" +
-            "▸      If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously, if you prefer, using the `?suggest [your suggestion]` command from any channel."
+            "<:paw:1424057688492347509>\u2800 **ŦOOŦ Radio:**\\n" +
+            "\u25b8      Plays **ŦOOŦ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\\n" +
+            "\u25b8      You can always see the song currently being played in the bot's status!\\n" +
+            "\u25b8      Use `z!help` to view commands.\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 **Shiro Utsugi (Me!):**\\n" +
+            "\u25b8      Mods use this bot to manage the server.\\n" +
+            "\u25b8      Members can use it to:\\n" +
+            "      \u25b8     Set their birthday (wishes go out at 12 AM JST)\\n" +
+            "      \u25b8     View a list of special IDOLiSH7 occasions like character birthdays and anniversaries\\n" +
+            "      \u25b8     Get song recommendations or dad jokes\\n" +
+            "\u25b8      Commands: `u!help`\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 **Moonlight Ichiro / Ryo Tsukumo:**\\n" +
+            "\u25b8      Markov-style bot that picks up words and phrases from members' texts and creates random sentences.\\n" +
+            "\u25b8      Works in select channels only.\\n" +
+            "\u25b8      Fun commands: you can ask him for jokes, confessions, fortunes, or apologies. (Good luck.)\\n" +
+            "\u25b8      Commands: `r!help`\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 **Bot Issues or Suggestions**\\n" +
+            "\u25b8      If a bot suddenly goes offline or isn't working properly, please ping <@526821200639295490>!\\n" +
+            "\u25b8      If you have any suggestions, new command ideas or new bot ideas, you can share them in <#1422302452689932409> — anonymously, if you prefer, using the `?suggest [your suggestion]` command from any channel."
         ),
     
     new EmbedBuilder()
         .setColor("b3a28d")
-        .setTitle("<:minaheart:1424206043268911154>⠀ Channels Overview⠀ <:snakenami:1424205913245356144>")
+        .setTitle("<:minaheart:1424206043268911154>\u2800 Channels Overview\u2800 <:snakenami:1424205913245356144>")
         .setDescription(
-            "<:paw:1424057688492347509>⠀ <#1422311794382475284>:  Greeting channel to welcome new members!\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050879234281565>:  Full server rules and server booster perks.\n" +
-            "<:paw:1424057688492347509>⠀ <#1426359257430753310>:  A guide to the custom bots and all the channels in this server.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422287272706965657>:  Important server announcements.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422287378353225909>:  ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422275724697665607>:  Pick your roles here. Server boosters can request custom roles from mods.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422295153762107483>:  Introductions channel! Use the pinned template if you like.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422302452689932409>:  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1421050807989567509>:  General chat meant for ZOOL/i7 discussions that don’t fall under any specific channel. If a dedicated channel exists for your topic, please move extended conversations there. Light off-topic chat is fine, but we kindly ask everyone to use the appropriate channels whenever possible. You can talk about parts 1-3 here without spoiler tags, but please keep longer discussions in the #main-story-content channel.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422307723667574794>:  Share fanart, merch, memes, and promotions.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422310557863907360>:  Talk about ŹOOĻ or i7 music.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422312080534667325>:  Discuss analyses, theories, and deep dives.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422315968796823572>:  Main story discussion (Parts 1-3 and anime).\n" +
-            "<:paw:1424057688492347509>⠀ <#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239>:  Discussions for later parts. Get the roles for these channels from #roles to access them.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422314877342711818>:  Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422319489608974356>:  Gameplay discussion, gacha pulls, etc.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422312476208529438>:  Ship discussions (Please keep it PG). Ships that include incest or a large age gap between a minor and an adult are not allowed here!\n" +
-            "<:paw:1424057688492347509>⠀ <#1426366299549728900>:  Talk about your yumeships here!\n" +
-            "<:paw:1424057688492347509>⠀ <#1422323857624268820>:  Headcanons, AUs, fanfiction.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422341311444418670>:  Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422341971384471592>:  Use bot commands here.\n\n" +
-            "<:paw:1424057688492347509>⠀ **Character-Specific Channels (Sasagero -You Are Theirs- Category)**\n" +
-            "▸   Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1422338837073498162>:  Non-i7 general discussions go here.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422338927641235496>:  Non-i7 related games, movies, shows, etc.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422305834590929086>:  Vent channel (requires Vent role; see pinned rules).\n\n" +
-            "<:paw:1424057688492347509>⠀ <#1422546276578496543>:  Chat while in VC or control the ŹOOĻ Radio bot here.\n" +
-            "<:paw:1424057688492347509>⠀ <#1422899506537566340>:  Streaming events/watch parties chat."
+            "<:paw:1424057688492347509>\u2800 <#1422311794382475284>:  Greeting channel to welcome new members!\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1421050879234281565>:  Full server rules and server booster perks.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1426359257430753310>:  A guide to the custom bots and all the channels in this server.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422287272706965657>:  Important server announcements.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422287378353225909>:  ŦOOŦ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422275724697665607>:  Pick your roles here. Server boosters can request custom roles from mods.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422295153762107483>:  Introductions channel! Use the pinned template if you like.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422302452689932409>:  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1421050807989567509>:  General chat meant for ZOOL/i7 discussions that don't fall under any specific channel. If a dedicated channel exists for your topic, please move extended conversations there. Light off-topic chat is fine, but we kindly ask everyone to use the appropriate channels whenever possible. You can talk about parts 1-3 here without spoiler tags, but please keep longer discussions in the #main-story-content channel.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422307723667574794>:  Share fanart, merch, memes, and promotions.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422310557863907360>:  Talk about ŦOOŦ or i7 music.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422312080534667325>:  Discuss analyses, theories, and deep dives.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422315968796823572>:  Main story discussion (Parts 1-3 and anime).\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239>:  Discussions for later parts. Get the roles for these channels from #roles to access them.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422314877342711818>:  Rabbit Chats and TVs, event stories, kuji stories, books, drama CDs, etc.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422319489608974356>:  Gameplay discussion, gacha pulls, etc.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422312476208529438>:  Ship discussions (Please keep it PG). Ships that include incest or a large age gap between a minor and an adult are not allowed here!\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1426366299549728900>:  Talk about your yumeships here!\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422323857624268820>:  Headcanons, AUs, fanfiction.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422341311444418670>:  Roleplays and roleplay discussions. You can use Tupperbots here. If you ask the mods, we can create threads for your RPs.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422341971384471592>:  Use bot commands here.\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 **Character-Specific Channels (Sasagero -You Are Theirs- Category)**\\n" +
+            "\u25b8   Dedicated channels to appreciate, gush, share merch or art, and scream over the individual characters.\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422338837073498162>:  Non-i7 general discussions go here.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422338927641235496>:  Non-i7 related games, movies, shows, etc.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422305834590929086>:  Vent channel (requires Vent role; see pinned rules).\\n\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422546276578496543>:  Chat while in VC or control the ŦOOŦ Radio bot here.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422899506537566340>:  Streaming events/watch parties chat."
         )
 ];
 
@@ -422,49 +423,67 @@ let botData = {
     braincellCounter: 0,
 };
 
+// Improved data loading with better error handling
 async function loadData() {
     try {
-        const data = await fs.readFile(DATA_FILE, "utf8");
-        botData = { ...botData, ...JSON.parse(data) };
-
-        for (const userId in botData.birthdays) {
-            botData.birthdays[userId].month = parseInt(
-                botData.birthdays[userId].month,
-                10,
-            );
-            botData.birthdays[userId].day = parseInt(
-                botData.birthdays[userId].day,
-                10,
-            );
-        }
-
-        if (!botData.songs || botData.songs.length === 0) {
+        // Check if file exists
+        try {
+            await fs.access(DATA_FILE);
+        } catch (error) {
+            console.log("No existing data file, starting fresh");
             botData.songs = [...DEFAULT_SONGS];
-        }
-
-        if (!botData.lastBroadcast) {
-            botData.lastBroadcast = {};
-        }
-
-        if (botData.braincellCounter === undefined) {
             botData.braincellCounter = 0;
+            await saveData();
+            return;
         }
 
-        await saveData();
+        const data = await fs.readFile(DATA_FILE, "utf8");
+        const parsedData = JSON.parse(data);
+        
+        // Merge with default structure to handle new fields
+        botData = {
+            birthdays: parsedData.birthdays || {},
+            songs: parsedData.songs && parsedData.songs.length > 0 ? parsedData.songs : [...DEFAULT_SONGS],
+            lastBroadcast: parsedData.lastBroadcast || {},
+            braincellCounter: parsedData.braincellCounter !== undefined ? parsedData.braincellCounter : 0,
+        };
+
+        // Ensure birthdays have proper numeric values
+        for (const userId in botData.birthdays) {
+            botData.birthdays[userId].month = parseInt(botData.birthdays[userId].month, 10);
+            botData.birthdays[userId].day = parseInt(botData.birthdays[userId].day, 10);
+        }
+
+        await saveData(); // Save to ensure file format is current
         console.log("Data loaded successfully");
     } catch (error) {
-        console.log("No existing data file, starting fresh");
+        console.error("Error loading data:", error);
+        console.log("Starting with fresh data");
         botData.songs = [...DEFAULT_SONGS];
         botData.braincellCounter = 0;
         await saveData();
     }
 }
 
+// Improved data saving with retry mechanism
 async function saveData() {
-    try {
-        await fs.writeFile(DATA_FILE, JSON.stringify(botData, null, 2));
-    } catch (error) {
-        console.error("Error saving data:", error);
+    const maxRetries = 3;
+    let attempt = 0;
+    
+    while (attempt < maxRetries) {
+        try {
+            await fs.writeFile(DATA_FILE, JSON.stringify(botData, null, 2));
+            return; // Success
+        } catch (error) {
+            attempt++;
+            console.error(`Save attempt ${attempt} failed:`, error);
+            if (attempt >= maxRetries) {
+                console.error("Failed to save data after multiple attempts");
+                throw error;
+            }
+            // Wait a bit before retrying
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
     }
 }
 
@@ -473,7 +492,7 @@ client.once("ready", async () => {
     await loadData();
     
     // Set bot status - Fixed to use ActivityType
-    client.user.setActivity("ŹOOĻ's Manager 🐾", { type: ActivityType.Playing });
+    client.user.setActivity("ŦOOŦ's Manager 🐾", { type: ActivityType.Playing });
     
     startScheduler();
 });
@@ -619,12 +638,40 @@ async function handleListBirthdays(message) {
         return message.reply("No birthdays have been added yet.");
     }
 
-    let list = "**Birthdays:**\n";
-    for (const [userId, data] of Object.entries(botData.birthdays)) {
-        list += `▪ ${data.username}: ${data.month}/${data.day}\n`;
+    // Sort birthdays by month (January to December), then by day
+    const sortedBirthdays = Object.entries(botData.birthdays)
+        .map(([userId, data]) => ({
+            userId,
+            username: data.username,
+            month: data.month,
+            day: data.day,
+            monthDay: `${data.month.toString().padStart(2, '0')}/${data.day.toString().padStart(2, '0')}`
+        }))
+        .sort((a, b) => {
+            if (a.month !== b.month) {
+                return a.month - b.month; // Sort by month first (1-12)
+            }
+            return a.day - b.day; // Then by day within the same month
+        });
+
+    // Get month names for display
+    const monthNames = ["January", "February", "March", "April", "May", "June", 
+                       "July", "August", "September", "October", "November", "December"];
+    
+    let description = "";
+    for (const birthday of sortedBirthdays) {
+        const monthName = monthNames[birthday.month - 1];
+        description += `🎂 **${birthday.username}** - ${monthName} ${birthday.day}\n`;
     }
 
-    message.reply(list);
+    const embed = new EmbedBuilder()
+        .setColor("#FF69B4")
+        .setTitle("🎉 Birthday List 🎉")
+        .setDescription(description || "No birthdays found.")
+        .setTimestamp()
+        .setFooter({ text: "Birthdays are listed in chronological order (January to December)" });
+
+    await message.reply({ embeds: [embed] });
 }
 
 async function handleListOccasions(message) {
@@ -677,7 +724,7 @@ async function handleListOccasions(message) {
         // Fallback to regular message if embed fails
         let list = "**Special Occasions:**\n";
         for (const occasion of SPECIAL_OCCASIONS) {
-            const line = `▪ ${occasion.date} - ${occasion.event}\n`;
+            const line = `• ${occasion.date} - ${occasion.event}\n`;
             if (list.length + line.length > 1900) {
                 await message.reply(list);
                 list = "";
@@ -844,11 +891,12 @@ async function handleBroadcast(message, args) {
         return message.reply("You need Administrator permission to use this command.");
     }
 
-    if (args.length === 0) {
-        return message.reply("Usage: u!broadcast Your message here");
-    }
-
+    // Get the broadcast message content
     const broadcastMessage = args.join(" ");
+    
+    if (!broadcastMessage && message.attachments.size === 0) {
+        return message.reply("Usage: u!broadcast Your message here (with or without attachments)");
+    }
 
     try {
         await message.delete();
@@ -856,7 +904,33 @@ async function handleBroadcast(message, args) {
         console.error("Error deleting command message:", error);
     }
 
-    const sentMessage = await message.channel.send(broadcastMessage);
+    // Prepare message options
+    const messageOptions = {};
+    
+    if (broadcastMessage) {
+        messageOptions.content = broadcastMessage;
+    }
+    
+    // Handle attachments
+    if (message.attachments.size > 0) {
+        const attachments = [];
+        for (const attachment of message.attachments.values()) {
+            try {
+                const response = await fetch(attachment.url);
+                const buffer = await response.arrayBuffer();
+                const attachmentBuilder = new AttachmentBuilder(Buffer.from(buffer), { name: attachment.name });
+                attachments.push(attachmentBuilder);
+            } catch (error) {
+                console.error("Error processing attachment:", error);
+            }
+        }
+        
+        if (attachments.length > 0) {
+            messageOptions.files = attachments;
+        }
+    }
+
+    const sentMessage = await message.channel.send(messageOptions);
 
     botData.lastBroadcast[message.author.id] = {
         messageId: sentMessage.id,
@@ -888,11 +962,11 @@ async function handleEditBroadcast(message, args) {
         return message.reply("Please reply to the message you want to edit, or use u!broadcast first.");
     }
 
-    if (args.length === 0) {
-        return message.reply("Usage: u!editbroadcast Your new message here");
-    }
-
     const newMessage = args.join(" ");
+    
+    if (!newMessage && message.attachments.size === 0) {
+        return message.reply("Usage: u!editbroadcast Your new message here (with or without attachments)");
+    }
 
     try {
         const channel = await client.channels.fetch(targetChannelId);
@@ -903,7 +977,33 @@ async function handleEditBroadcast(message, args) {
             return message.reply("I can only edit messages that I sent!");
         }
 
-        await broadcastMessage.edit(newMessage);
+        // Prepare message options for editing
+        const messageOptions = {};
+        
+        if (newMessage) {
+            messageOptions.content = newMessage;
+        }
+        
+        // Handle attachments in the edit command
+        if (message.attachments.size > 0) {
+            const attachments = [];
+            for (const attachment of message.attachments.values()) {
+                try {
+                    const response = await fetch(attachment.url);
+                    const buffer = await response.arrayBuffer();
+                    const attachmentBuilder = new AttachmentBuilder(Buffer.from(buffer), { name: attachment.name });
+                    attachments.push(attachmentBuilder);
+                } catch (error) {
+                    console.error("Error processing attachment:", error);
+                }
+            }
+            
+            if (attachments.length > 0) {
+                messageOptions.files = attachments;
+            }
+        }
+
+        await broadcastMessage.edit(messageOptions);
 
         try {
             await message.delete();
@@ -911,10 +1011,9 @@ async function handleEditBroadcast(message, args) {
             console.error("Error deleting command message:", error);
         }
 
-        const confirmation = await message.channel.send(
-            "Broadcast message edited successfully!",
-        );
-        setTimeout(() => confirmation.delete().catch(console.error), 3000);
+        // REMOVED: The confirmation message that was previously shown
+        // The command now completes silently as requested
+        
     } catch (error) {
         console.error("Error editing broadcast message:", error);
         message.reply(
@@ -931,7 +1030,7 @@ async function handleHelp(message) {
         .addFields(
             {
                 name: "**Birthday Commands**",
-                value: "`u!addbirthday @user MM/DD` - Add a birthday (Users can set their own, Admins can set any)\n`u!removebirthday @user` - Remove a birthday (Users can remove their own, Admins can remove any)\n`u!listbirthdays` - List all birthdays of server members\n**Note:** The bot will send your birthday message at 12:00 AM JST if your birthday is set before the day. If you set it on the same day (JST), the message will be sent one minute later.",
+                value: "`u!addbirthday @user MM/DD` - Add a birthday (Users can set their own, Admins can set any)\n`u!removebirthday @user` - Remove a birthday (Users can remove their own, Admins can remove any)\n`u!listbirthdays` - List all birthdays of server members (sorted by month)\n**Note:** The bot will send your birthday message at 12:00 AM JST if your birthday is set before the day. If you set it on the same day (JST), the message will be sent one minute later.",
                 inline: false,
             },
             {
@@ -948,9 +1047,14 @@ async function handleHelp(message) {
                 name: "**Song Management**",
                 value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list\n`u!listsongs` - List all songs currently in the list",
                 inline: false,
+            },
+            {
+                name: "**Admin Commands**",
+                value: "`u!broadcast [message] [+ attachments]` - Send a broadcast message with optional attachments\n`u!editbroadcast [message] [+ attachments]` - Edit a broadcast message (reply to message or edit last broadcast) with optional attachments\n`u!counter` - Update braincell counter",
+                inline: false,
             }
        )
-      .setFooter({ text: 'ŹOOĻ Management Bot ▪ Created by pinkmagic (Sky)' })
+      .setFooter({ text: 'ŦOOŦ Management Bot • Created by pinkmagic (Sky)' })
       .setTimestamp();
 
     message.reply({ embeds: [embed] });
@@ -975,7 +1079,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>\n⠀",
+            content: "**Welcome to ŦOOŦ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŦOOŦ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>\u2800",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1062,11 +1166,41 @@ async function sendBirthdayMessage(userId) {
     }
 }
 
+// Auto-save data every 5 minutes to prevent data loss
+setInterval(async () => {
+    try {
+        await saveData();
+        console.log("Auto-save completed");
+    } catch (error) {
+        console.error("Auto-save failed:", error);
+    }
+}, 5 * 60 * 1000); // 5 minutes
+
+// Save data on process exit
+process.on('SIGINT', async () => {
+    console.log("Received SIGINT, saving data...");
+    try {
+        await saveData();
+        process.exit(0);
+    } catch (error) {
+        console.error("Error saving data on exit:", error);
+        process.exit(1);
+    }
+});
+
+process.on('SIGTERM', async () => {
+    console.log("Received SIGTERM, saving data...");
+    try {
+        await saveData();
+        process.exit(0);
+    } catch (error) {
+        console.error("Error saving data on exit:", error);
+        process.exit(1);
+    }
+});
+
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
-
-
-
 
 
 
