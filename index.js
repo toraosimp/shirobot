@@ -1046,11 +1046,6 @@ async function handleHelp(message) {
                 name: "**Song Management**",
                 value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list\n`u!listsongs` - List all songs currently in the list",
                 inline: false,
-            },
-            {
-                name: "**Admin Commands**",
-                value: "`u!broadcast [message] [+ attachments]` - Send a broadcast message with optional attachments\n`u!editbroadcast [message] [+ attachments]` - Edit a broadcast message (reply to message or edit last broadcast) with optional attachments\n`u!counter` - Update braincell counter",
-                inline: false,
             }
        )
       .setFooter({ text: 'ŹOOĻ Management Bot • Created by pinkmagic (Sky)' })
@@ -1200,6 +1195,7 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
