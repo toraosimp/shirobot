@@ -261,7 +261,7 @@ const SPECIAL_OCCASIONS = [
     { date: "06/08", event: "Natsume-san's birthday" },
     { date: "11/29", event: "Inumaru-san's birthday" },
     { date: "12/06", event: "Isumi-san's birthday" },
-    { date: "08/31", event: "ŦOOŦ's anniversary!" },
+    { date: "08/31", event: "ŹOOĻ's anniversary!" },
     { date: "08/24", event: "My birthday 😅" },
     { date: "09/09", event: "Ryo-kun's birthday" },
     { date: "01/17", event: "President Takanashi's birthday" },
@@ -313,7 +313,7 @@ const WELCOME_EMBEDS = [
 
             "**<:paw:1424057688492347509>\u2800 Ships**\\n" +
             "\u25b8    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\\n" +
-            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŦOOŦ are popular, and this is a ŦOOŦ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
+            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŹOOĻ are popular, and this is a ŹOOĻ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
             "\u25b8    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\\n" +
             "\u25b8    Conversations about their dynamics that do not frame them romantically are perfectly fine.\\n" +
             "\u25b8    Thank you for your understanding and helping us maintain a comfortable space for everyone!\\n\\n" +
@@ -341,8 +341,8 @@ const WELCOME_EMBEDS = [
             "\u25b8    If you have questions, concerns, or suggestions, feel free to contact a mod — we're always happy to help!\\n\\n" +
 
             "**<:paw:1424057688492347509> \u2800Have Fun!**\\n" +
-            "\u25b8    Enjoy your time in the server and express your love for ŦOOŦ to your heart's content — as long as you follow the rules!\\n\\n" +
-            "Lovely ŦOOŦ, Enjoy ŦOOŦ. <:paw:1424057688492347509>"
+            "\u25b8    Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules!\\n\\n" +
+            "Lovely ŹOOĻ, Enjoy ŹOOĻ. <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -353,15 +353,15 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>\u2800 Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\\n" +
             "<:paw:1424057688492347509>\u2800 Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\\n" +
             "<:paw:1424057688492347509>\u2800 Server Boosters appear separately in the members list.\\n" +
-            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŦOOŦ server tag**!"
+            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŹOOĻ server tag**!"
         ),
     
     new EmbedBuilder()
         .setColor("8f7577")
         .setTitle("<:toraheart:1424206045823369256>\u2800 Our Custom Bots\u2800 <:tigerao:1424205920476598363>")
         .setDescription(
-            "<:paw:1424057688492347509>\u2800 **ŦOOŦ Radio:**\\n" +
-            "\u25b8      Plays **ŦOOŦ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\\n" +
+            "<:paw:1424057688492347509>\u2800 **ŹOOĻ Radio:**\\n" +
+            "\u25b8      Plays **ŹOOĻ's music** (including every song they've featured in) **24/7 on shuffle** in the <#1422898697850720277> channel.\\n" +
             "\u25b8      You can always see the song currently being played in the bot's status!\\n" +
             "\u25b8      Use `z!help` to view commands.\\n\\n" +
             "<:paw:1424057688492347509>\u2800 **Shiro Utsugi (Me!):**\\n" +
@@ -389,13 +389,13 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>\u2800 <#1421050879234281565>:  Full server rules and server booster perks.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1426359257430753310>:  A guide to the custom bots and all the channels in this server.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422287272706965657>:  Important server announcements.\\n" +
-            "<:paw:1424057688492347509>\u2800 <#1422287378353225909>:  ŦOOŦ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422287378353225909>:  ŹOOĻ news, updates and translations. Members with the <@&1424090197305593936> role will be pinged.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422275724697665607>:  Pick your roles here. Server boosters can request custom roles from mods.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422295153762107483>:  Introductions channel! Use the pinned template if you like.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422302452689932409>:  Suggestions for anything in the server. Use `?suggest [your suggestion]` for anonymity.\\n\\n" +
             "<:paw:1424057688492347509>\u2800 <#1421050807989567509>:  General chat meant for ZOOL/i7 discussions that don't fall under any specific channel. If a dedicated channel exists for your topic, please move extended conversations there. Light off-topic chat is fine, but we kindly ask everyone to use the appropriate channels whenever possible. You can talk about parts 1-3 here without spoiler tags, but please keep longer discussions in the #main-story-content channel.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422307723667574794>:  Share fanart, merch, memes, and promotions.\\n" +
-            "<:paw:1424057688492347509>\u2800 <#1422310557863907360>:  Talk about ŦOOŦ or i7 music.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422310557863907360>:  Talk about ŹOOĻ or i7 music.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422312080534667325>:  Discuss analyses, theories, and deep dives.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422315968796823572>:  Main story discussion (Parts 1-3 and anime).\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422313980827009114>, <#1422314507438657586>, <#1422314830353666239>:  Discussions for later parts. Get the roles for these channels from #roles to access them.\\n" +
@@ -411,7 +411,7 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>\u2800 <#1422338837073498162>:  Non-i7 general discussions go here.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422338927641235496>:  Non-i7 related games, movies, shows, etc.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422305834590929086>:  Vent channel (requires Vent role; see pinned rules).\\n\\n" +
-            "<:paw:1424057688492347509>\u2800 <#1422546276578496543>:  Chat while in VC or control the ŦOOŦ Radio bot here.\\n" +
+            "<:paw:1424057688492347509>\u2800 <#1422546276578496543>:  Chat while in VC or control the ŹOOĻ Radio bot here.\\n" +
             "<:paw:1424057688492347509>\u2800 <#1422899506537566340>:  Streaming events/watch parties chat."
         )
 ];
@@ -1053,7 +1053,7 @@ async function handleHelp(message) {
                 inline: false,
             }
        )
-      .setFooter({ text: 'ŦOOŦ Management Bot • Created by pinkmagic (Sky)' })
+      .setFooter({ text: 'ŹOOĻ Management Bot • Created by pinkmagic (Sky)' })
       .setTimestamp();
 
     message.reply({ embeds: [embed] });
@@ -1078,7 +1078,7 @@ async function handleWelcomeRules(message) {
 
     try {
         await message.channel.send({
-            content: "**Welcome to ŦOOŦ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŦOOŦ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>\u2800",
+            content: "**Welcome to ŹOOĻ World Domination! <:paw:1424057688492347509>**\nWe're so glad you're here! This is a friendly and safe space for fans of ŹOOĻ to chat, share, and have fun.\n\nTo make sure everyone has a good experience, please take a moment to read the rules, guidelines, and information about our server below.\n\n<:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363> <:haruheart:1424206041020891226><:boaruka:1424203440883630201> <:tomaheart:1424206048226578562><:dogmaru:1424205918098428100> <:minaheart:1424206043268911154><:snakenami:1424205913245356144> <:toraheart:1424206045823369256><:tigerao:1424205920476598363>\u2800",
             embeds: [WELCOME_EMBEDS[0]]
         });
     } catch (error) {
@@ -1200,6 +1200,7 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
