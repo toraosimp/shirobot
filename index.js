@@ -35,7 +35,7 @@ const PUNS = [
     "I only know 25 letters of the alphabet. I don't know y.",
     "Did you hear about the claustrophobic astronaut? He just needed a little space.",
     "Why did the math book look so sad? Because it had too many problems.",
-    "I told my wife she should do lunges to stay in shape. That would be a big step forward.",
+    "I told Ryo-kun he should do lunges to stay in shape. That would be a big step forward.",
     "Why did the coffee file a police report? It got mugged.",
     "What do you call a pig that does karate? A pork chop.",
     "Why can't leopards play hide-and-seek? Because they're always spotted.",
@@ -313,7 +313,7 @@ const WELCOME_EMBEDS = [
 
             "**<:paw:1424057688492347509>\u2800 Ships**\\n" +
             "\u25b8    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\\n" +
-            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŹOOĻ are popular, and this is a ŹOOĻ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
+            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŦOOŦ are popular, and this is a ŦOOŦ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
             "\u25b8    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\\n" +
             "\u25b8    Conversations about their dynamics that do not frame them romantically are perfectly fine.\\n" +
             "\u25b8    Thank you for your understanding and helping us maintain a comfortable space for everyone!\\n\\n" +
@@ -341,8 +341,8 @@ const WELCOME_EMBEDS = [
             "\u25b8    If you have questions, concerns, or suggestions, feel free to contact a mod — we're always happy to help!\\n\\n" +
 
             "**<:paw:1424057688492347509> \u2800Have Fun!**\\n" +
-            "\u25b8    Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules!\\n\\n" +
-            "Lovely ŹOOĻ, Enjoy ŹOOĻ. <:paw:1424057688492347509>"
+            "\u25b8    Enjoy your time in the server and express your love for ŦOOŦ to your heart's content — as long as you follow the rules!\\n\\n" +
+            "Lovely ŦOOŦ, Enjoy ŦOOŦ. <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -353,7 +353,7 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>\u2800 Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\\n" +
             "<:paw:1424057688492347509>\u2800 Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\\n" +
             "<:paw:1424057688492347509>\u2800 Server Boosters appear separately in the members list.\\n" +
-            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŹOOĻ server tag**!"
+            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŦOOŦ server tag**!"
         ),
     
     new EmbedBuilder()
@@ -665,10 +665,10 @@ async function handleListBirthdays(message) {
     }
 
     const embed = new EmbedBuilder()
-        .setColor("#8b8b8c")
-        .setTitle("Members Birthday List 🎉")
+        .setColor("#8b8b8c")  // Same color as help command
+        .setTitle("Members Birthday List 🥳")
         .setDescription(description || "No birthdays found.")
-        .setTimestamp()
+        .setTimestamp();  // No footer as requested
 
     await message.reply({ embeds: [embed] });
 }
@@ -897,27 +897,20 @@ async function handleBroadcast(message, args) {
         return message.reply("Usage: u!broadcast Your message here (with or without attachments)");
     }
 
-    try {
-        await message.delete();
-    } catch (error) {
-        console.error("Error deleting command message:", error);
-    }
-
-    // Prepare message options
+    // Prepare message options FIRST before deleting the original message
     const messageOptions = {};
     
     if (broadcastMessage) {
         messageOptions.content = broadcastMessage;
     }
     
-    // Handle attachments
+    // Handle attachments - process BEFORE deleting the message
     if (message.attachments.size > 0) {
         const attachments = [];
         for (const attachment of message.attachments.values()) {
             try {
-                const response = await fetch(attachment.url);
-                const buffer = await response.arrayBuffer();
-                const attachmentBuilder = new AttachmentBuilder(Buffer.from(buffer), { name: attachment.name });
+                // Use the attachment URL directly instead of downloading
+                const attachmentBuilder = new AttachmentBuilder(attachment.url, { name: attachment.name });
                 attachments.push(attachmentBuilder);
             } catch (error) {
                 console.error("Error processing attachment:", error);
@@ -929,7 +922,15 @@ async function handleBroadcast(message, args) {
         }
     }
 
+    // Send the new broadcast message first
     const sentMessage = await message.channel.send(messageOptions);
+
+    // Only delete the original message after the new one is sent successfully
+    try {
+        await message.delete();
+    } catch (error) {
+        console.error("Error deleting command message:", error);
+    }
 
     botData.lastBroadcast[message.author.id] = {
         messageId: sentMessage.id,
@@ -983,14 +984,13 @@ async function handleEditBroadcast(message, args) {
             messageOptions.content = newMessage;
         }
         
-        // Handle attachments in the edit command
+        // Handle attachments in the edit command - use URL directly
         if (message.attachments.size > 0) {
             const attachments = [];
             for (const attachment of message.attachments.values()) {
                 try {
-                    const response = await fetch(attachment.url);
-                    const buffer = await response.arrayBuffer();
-                    const attachmentBuilder = new AttachmentBuilder(Buffer.from(buffer), { name: attachment.name });
+                    // Use the attachment URL directly instead of downloading
+                    const attachmentBuilder = new AttachmentBuilder(attachment.url, { name: attachment.name });
                     attachments.push(attachmentBuilder);
                 } catch (error) {
                     console.error("Error processing attachment:", error);
@@ -1200,11 +1200,6 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
-
-
-
-
-
 
 
 
