@@ -285,8 +285,8 @@ const SPECIAL_OCCASIONS = [
     { date: "10/12", event: "Tsunashi-san's birthday" },
     { date: "11/11", event: "Momo-san's birthday" },
     { date: "11/25", event: "einsatZ release anniversary" },
-    { date: "12/06", event: "Ŧquare release anniversary" },
-    { date: "12/14", event: "Ŧenit release anniversary" },
+    { date: "12/06", event: "Źquare release anniversary" },
+    { date: "12/14", event: "Źenit release anniversary" },
     { date: "12/24", event: "Yuki-san's birthday" },
 ];
 
@@ -1200,6 +1200,7 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
