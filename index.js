@@ -430,6 +430,10 @@ let botData = {
     braincellCounter: 0,
 };
 
+// Cooldown map for u!song command (userId -> timestamp)
+const songCooldowns = new Map();
+const SONG_COOLDOWN_MS = 30000; // 30 seconds
+
 // Improved data loading with better error handling
 async function loadData() {
     try {
@@ -575,6 +579,12 @@ client.on("messageCreate", async (message) => {
             case "channelguide":
                 await handleChannelGuide(message);
                 break;
+            case "choose":
+                await handleChoose(message, args);
+                break;
+            case "coin":
+                await handleCoin(message);
+                break;
             default:
                 break;
         }
@@ -631,7 +641,7 @@ async function handleAddBirthday(message, args) {
     if (monthNum === currentMonth && dayNum === currentDay) {
         // Send birthday message immediately with a 1-minute delay
         setTimeout(async () => {
-            await sendBirthdayMessage(userMention.id);
+            await sendBirthdayMessage([userMention.id]);
         }, 60000); // 1 minute delay
     }
 
@@ -745,26 +755,51 @@ async function handleListOccasions(message) {
 
 async function handleRemoveBirthday(message, args) {
     if (args.length < 1) {
-        return message.reply("Usage: u!removebirthday @user");
+        return message.reply("Usage: u!removebirthday @user  *or*  u!removebirthday username");
     }
-
     const userMention = message.mentions.users.first();
-    if (!userMention) {
-        return message.reply("Please mention a valid user.");
+
+    if (userMention) {
+        // Allow users to remove their own birthday, or admins to remove any birthday
+        if (userMention.id !== message.author.id &&
+            !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+            return message.reply("You can only remove your own birthday. Admins can remove birthdays for others.");
+        }
+
+        if (botData.birthdays[userMention.id]) {
+            delete botData.birthdays[userMention.id];
+            await saveData();
+            message.reply(`Birthday removed for ${userMention.username}.`);
+        } else {
+            message.reply(`No birthday found for ${userMention.username}.`);
+        }
+        return;
     }
 
-    // Allow users to remove their own birthday, or admins to remove any birthday
-    if (userMention.id !== message.author.id && 
-        !message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-        return message.reply("You can only remove your own birthday. Admins can remove birthdays for others.");
+    // If no mention, try to find by username
+    const username = args.join(" ").trim();
+
+    if (!username) {
+        return message.reply("Usage: u!removebirthday @user  *or*  u!removebirthday username");
     }
 
-    if (botData.birthdays[userMention.id]) {
-        delete botData.birthdays[userMention.id];
+    // Only admins can remove by username (since we can't verify ownership)
+    if (!message.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+        return message.reply("You can only remove your own birthday by mentioning yourself. Admins can remove birthdays by username.");
+    }
+
+    // Search for the user by username (case-insensitive)
+    const entry = Object.entries(botData.birthdays).find(
+        ([id, data]) => data.username.toLowerCase() === username.toLowerCase()
+    );
+
+    if (entry) {
+        const [userId, data] = entry;
+        delete botData.birthdays[userId];
         await saveData();
-        message.reply(`Birthday removed for ${userMention.username}.`);
+        message.reply(`Birthday removed for ${data.username}.`);
     } else {
-        message.reply(`No birthday found for ${userMention.username}.`);
+        message.reply(`No birthday found for username "${username}".`);
     }
 }
 
@@ -883,11 +918,64 @@ async function handleSong(message) {
         return message.reply("I am unable to think of any songs right now.");
     }
 
+    // Check cooldown
+    const now = Date.now();
+    const lastUsed = songCooldowns.get(message.author.id);
+
+    if (lastUsed && (now - lastUsed) < SONG_COOLDOWN_MS) {
+        const remainingTime = Math.ceil((SONG_COOLDOWN_MS - (now - lastUsed)) / 1000);
+        return message.reply(`Please slow down! Try again in ${remainingTime} seconds.`);
+    }
+
+    // Set cooldown
+    songCooldowns.set(message.author.id, now);
+
     const randomSong =
         botData.songs[Math.floor(Math.random() * botData.songs.length)];
     message.reply(
         `Wonderful question. I strongly recommend you listen to "${randomSong}" today!`,
     );
+}
+
+async function handleChoose(message, args) {
+    if (args.length === 0) {
+        return message.reply("Usage: u!choose option1 | option2 | option3 | ...\nExample: u!choose cat | dog | bird");
+    }
+
+    // Join all args back and split by pipe
+    const input = args.join(" ");
+    const options = input
+        .split("|")
+        .map(opt => opt.trim())
+        .filter(opt => opt.length > 0);
+
+    if (options.length < 2) {
+        return message.reply("You need at least 2 options to choose from! Separate them with `|`.\nExample: u!choose cat | dog | bird");
+    }
+
+    if (options.length > 10) {
+        return message.reply("You can only have up to 10 options! Please remove some and try again.");
+    }
+
+    const chosen = options[Math.floor(Math.random() * options.length)];
+
+    try {
+        await message.reply(`I think you should go with ${chosen}! <:paw:1424057688492347509>`);
+    } catch (error) {
+        console.error("Error sending choose response:", error);
+        message.reply("An error occurred while making a choice. Please try again.");
+    }
+}
+
+async function handleCoin(message) {
+    const result = Math.random() < 0.5 ? "Heads" : "Tails";
+
+    try {
+        await message.reply(`Ah, looks like you got **${result}**!`);
+    } catch (error) {
+        console.error("Error sending coin flip response:", error);
+        message.reply("An error occurred while flipping the coin. Please try again.");
+    }
 }
 
 async function handleBroadcast(message, args) {
@@ -1036,7 +1124,7 @@ async function handleHelp(message) {
         .addFields(
             {
                 name: "**Birthday Commands**",
-                value: "`u!addbirthday @user MM/DD` - Add a birthday (Users can set their own, Admins can set any)\n`u!removebirthday @user` - Remove a birthday (Users can remove their own, Admins can remove any)\n`u!listbirthdays` - List all birthdays of server members (sorted by month)\n**Note:** The bot will send your birthday message at 12:00 AM JST if your birthday is set before the day. If you set it on the same day (JST), the message will be sent one minute later.",
+                value: "`u!addbirthday @user MM/DD` - Add a birthday (Users can set their own, Admins can set any)\n`u!removebirthday @user` - Remove a birthday (Users can remove their own, Admins can remove any; Admins can also use a username)\n`u!listbirthdays` - List all birthdays of server members (sorted by month)\n**Note:** The bot will send your birthday message at 12:00 AM JST if your birthday is set before the day. If you set it on the same day (JST), the message will be sent one minute later.",
                 inline: false,
             },
             {
@@ -1046,12 +1134,12 @@ async function handleHelp(message) {
             },
             {
                 name: "**Fun Commands**",
-                value: "`u!pun` - Get a random dad joke\n`u!song` - Get a random song recommendation",
+                value: "`u!pun` - Get a random dad joke\n`u!song` - Get a random song recommendation\n`u!choose option1 | option2 | ...` - Let the bot choose one option for you (up to 10 options)\n`u!coin` - Flip a coin (Heads or Tails!)",
                 inline: false,
             },
             {
                 name: "**Song Management**",
-                value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list\n`u!listsongs` - List all songs currently in the list",
+                value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list",
                 inline: false,
             }
        )
@@ -1136,10 +1224,17 @@ function startScheduler() {
             const currentMonth = now.month() + 1;
             const currentDay = now.date();
 
+            // Collect all users who have a birthday today
+            const birthdayUsers = [];
             for (const [userId, data] of Object.entries(botData.birthdays)) {
                 if (data.month === currentMonth && data.day === currentDay) {
-                    await sendBirthdayMessage(userId);
+                    birthdayUsers.push(userId);
                 }
+            }
+
+            // Send a single birthday message mentioning all users
+            if (birthdayUsers.length > 0) {
+                await sendBirthdayMessage(birthdayUsers);
             }
         },
         {
@@ -1150,18 +1245,20 @@ function startScheduler() {
     console.log("Scheduler started (JST timezone)");
 }
 
-async function sendBirthdayMessage(userId) {
+async function sendBirthdayMessage(userIds) {
     const channel = client.channels.cache.get(BIRTHDAY_CHANNEL_ID);
     if (!channel) {
         console.error(`Birthday channel ${BIRTHDAY_CHANNEL_ID} not found`);
         return;
     }
 
-    const message = BIRTHDAY_MESSAGE.replace("{user}", `<@${userId}>`);
+    // Create mentions for all users
+    const mentions = userIds.map(id => `<@${id}>`).join(", ");
+    const message = BIRTHDAY_MESSAGE.replace("{user}", mentions);
 
     try {
         await channel.send(message);
-        console.log(`Sent birthday message for user ${userId}`);
+        console.log(`Sent birthday message for users: ${userIds.join(", ")}`);
     } catch (error) {
         console.error("Error sending birthday message:", error);
     }
@@ -1202,6 +1299,10 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
+
+
+
 
 
 
