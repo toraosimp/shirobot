@@ -431,8 +431,9 @@ let botData = {
 };
 
 // Cooldown map for u!song command (userId -> timestamp)
-const songCooldowns = new Map();
-const SONG_COOLDOWN_MS = 30000; // 30 seconds
+const songRateLimits = new Map(); // userId -> array of timestamps
+const SONG_RATE_LIMIT = 6;        // max uses
+const SONG_RATE_WINDOW_MS = 30000; // 30 seconds
 
 // Improved data loading with better error handling
 async function loadData() {
@@ -918,20 +919,36 @@ async function handleSong(message) {
         return message.reply("I am unable to think of any songs right now.");
     }
 
-    // Check cooldown
+    const userId = message.author.id;
     const now = Date.now();
-    const lastUsed = songCooldowns.get(message.author.id);
 
-    if (lastUsed && (now - lastUsed) < SONG_COOLDOWN_MS) {
-        const remainingTime = Math.ceil((SONG_COOLDOWN_MS - (now - lastUsed)) / 1000);
-        return message.reply(`Please slow down! Try again in ${remainingTime} seconds.`);
+    // Get or initialize the user's timestamp array
+    if (!songRateLimits.has(userId)) {
+        songRateLimits.set(userId, []);
     }
 
-    // Set cooldown
-    songCooldowns.set(message.author.id, now);
+    let timestamps = songRateLimits.get(userId);
 
-    const randomSong =
-        botData.songs[Math.floor(Math.random() * botData.songs.length)];
+    // Remove timestamps older than the window (30 seconds)
+    timestamps = timestamps.filter(ts => now - ts < SONG_RATE_WINDOW_MS);
+
+    // Check if user exceeded the limit
+    if (timestamps.length >= SONG_RATE_LIMIT) {
+        const oldestTimestamp = timestamps[0];
+        const timeUntilReset = Math.ceil((SONG_RATE_WINDOW_MS - (now - oldestTimestamp)) / 1000);
+        
+        return message.reply(
+            `Please slow down! You've used this command too many times. ` +
+            `Try again in about ${timeUntilReset} seconds.`
+        );
+    }
+
+    // Add current timestamp and save back
+    timestamps.push(now);
+    songRateLimits.set(userId, timestamps);
+
+    // Proceed with song recommendation
+    const randomSong = botData.songs[Math.floor(Math.random() * botData.songs.length)];
     message.reply(
         `Wonderful question. I strongly recommend you listen to "${randomSong}" today!`,
     );
