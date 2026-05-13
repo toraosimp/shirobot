@@ -253,6 +253,13 @@ const DEFAULT_SONGS = [
     "STARDOM GENIUS",
     "Magical Power",
     "Egao no Tsuzuki",
+    "New Sensation",
+    "Answer",
+    "MY LiFE!",
+    "NAVIGATOR:",
+    "Sokyokusen Mirage",
+    "Rasen",
+    "Anyway and everyway",
 ];
 
 // Hardcoded special occasions list
