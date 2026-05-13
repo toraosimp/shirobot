@@ -960,7 +960,7 @@ async function handleChoose(message, args) {
     const chosen = options[Math.floor(Math.random() * options.length)];
 
     try {
-        await message.reply(`I think you should go with ${chosen}! <:paw:1424057688492347509>`);
+        await message.reply(`I think you should go with **${chosen}**! <:paw:1424057688492347509>`);
     } catch (error) {
         console.error("Error sending choose response:", error);
         message.reply("An error occurred while making a choice. Please try again.");
