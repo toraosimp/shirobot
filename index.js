@@ -55,13 +55,11 @@ function parseHex(hex) {
 }
 
 /**
- * Check whether the guild has the Enhanced Styles perk enabled,
- * which is required for gradient / holographic role colours.
- * We check the guild's features for 'ROLE_ICONS', which is the
- * feature flag that becomes available when Enhanced Styles is active.
+ * Check whether the guild has the Enhanced Role Styles perk enabled
+ * (required for gradient / holographic role colours).
  */
 function isGradientEnabled(guild) {
-    return guild.features.has('ROLE_ICONS');
+    return guild.features.has('ENHANCED_ROLE_COLORS');
 }
 
 /**
@@ -666,6 +664,9 @@ client.on("messageCreate", async (message) => {
                 break;
             case "help":
                 await handleHelp(message);
+                break;
+             case "customroles":
+                await handleCustomRoles(message);
                 break;
             case "counter":
                 await handleCounter(message);
@@ -1962,21 +1963,7 @@ async function handleHelp(message) {
             },
             {
                 name: "**Custom Role Commands**",
-                value: "Create and manage your own personal role with a custom name and colour!\n\n" +
-                    "**— Create a custom role:**\n" +
-                    "`u!createrole \"Role Name\"` — Create a role with **no custom colour** (inherits your highest role's colour)\n" +
-                    "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
-                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Enhanced Styles perk)*\n" +
-                    "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Enhanced Styles perk)*\n\n" +
-                    "**— Edit or remove your role:**\n" +
-                    "`u!editrole name \"New Name\"` — Rename your custom role\n" +
-                    "`u!editrole color #RRGGBB` — Change your role to a solid colour\n" +
-                    "`u!editrole color #RRGGBB #RRGGBB` — Change your role to a gradient\n" +
-                    "`u!editrole color holographic` — Change your role to holographic\n" +
-                    "`u!removerole` — Delete your custom role\n\n" +
-                    "**— Create a role with preset character colours:**\n" +
-                    "`u!chooserole Haruka | Touma | Minami | Torao`\n" +
-                    "**Notes:** You can only have **one** custom role at a time. If your Booster or any other eligible role removed, your custom role will be automatically removed.",
+                value:"`u!customroles` — Detailed custom role guide",
                 inline: false,
             },
        )
@@ -1984,6 +1971,55 @@ async function handleHelp(message) {
       .setTimestamp();
 
     message.reply({ embeds: [embed] });
+}
+
+async function handleCustomRoles(message) {
+    const embed = new EmbedBuilder()
+        .setColor("#8b8b8c")
+        .setTitle("Custom Role Guide")
+        .setDescription("Create and manage your own personal role with a custom name and colour!")
+        .addFields(
+            {
+                name: "**— Create a custom role:**",
+                value: 
+                    "`u!createrole \"Role Name\"` — Create a role with **no custom colour** (inherits your highest role's colour)\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Enhanced Styles perk)*\n" +
+                    "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Enhanced Styles perk)*",
+                inline: false,
+            },
+            {
+                name: "**— Edit or remove your role:**",
+                value: 
+                    "`u!editrole name \"New Name\"` — Rename your custom role\n" +
+                    "`u!editrole color #RRGGBB` — Change your role to a solid colour\n" +
+                    "`u!editrole color #RRGGBB #RRGGBB` — Change your role to a gradient\n" +
+                    "`u!editrole color holographic` — Change your role to holographic\n" +
+                    "`u!removerole` — Delete your custom role",
+                inline: false,
+            },
+            {
+                name: "**— Preset Character Gradient Roles**",
+                value: "`u!chooserole Haruka | Touma | Minami | Torao`",
+                inline: false,
+            },
+            {
+                name: "**Notes**",
+                value: "• You can only have **one** custom role at a time.\n" +
+                       "• Only Server Boosters and eligible roles can use these commands.\n" +
+                       "• If your Booster or eligible role is removed, your custom role will be automatically deleted.",
+                inline: false,
+            }
+        )
+        .setFooter({ text: 'ŹOOĻ Server Management Bot • Created by pinkmagic (Sky)' })
+        .setTimestamp();
+
+    try {
+        await message.reply({ embeds: [embed] });
+    } catch (error) {
+        console.error("Custom roles embed error:", error);
+        message.reply("❌ Failed to send custom roles information.");
+    }
 }
 
 async function handleCounter(message) {
