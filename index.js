@@ -1286,7 +1286,7 @@ async function handleChooseRole(message, args) {
 
     // Capitalise the character name for the role label
     const charName = choice.charAt(0).toUpperCase() + choice.slice(1);
-    const roleName = `${charName} Fan`;
+    const roleName = `${charName}`;
 
     const c1 = parseHex(preset.color1);
 
@@ -1304,7 +1304,6 @@ async function handleChooseRole(message, args) {
 
     return message.reply(
         `✅ Created your **${charName}**-themed gradient role **"${roleName}"** ` +
-        `with colours **${preset.color1}** → **${preset.color2}**! ` +
         `You can rename it anytime with \`u!editrole name "New Name"\`.`
     );
 }
@@ -1961,11 +1960,6 @@ async function handleHelp(message) {
                 value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list",
                 inline: false,
             },
-            {
-                name: "**Custom Role Commands**",
-                value:"`u!customroles` — Detailed custom role guide",
-                inline: false,
-            },
        )
       .setFooter({ text: 'ŹOOĻ Server Management Bot • Created by pinkmagic (Sky)' })
       .setTimestamp();
@@ -1980,26 +1974,26 @@ async function handleCustomRoles(message) {
         .setDescription("Create and manage your own personal role with a custom name and colour!")
         .addFields(
             {
-                name: "**— Create a custom role:**",
+                name: "**Create a custom role:**",
                 value: 
-                    "`u!createrole \"Role Name\"` — Create a role with **no custom colour** (inherits your highest role's colour)\n" +
-                    "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
-                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Enhanced Styles perk)*\n" +
-                    "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Enhanced Styles perk)*",
+                    "`u!createrole \"Role Name\"` - Create a role with **no custom colour** (inherits your highest role's colour)\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB` - Create a role with a **solid** colour\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` - Create a role with a **gradient** (two colours)\n" +
+                    "`u!createrole \"Role Name\" holographic` - Create a **holographic** role*",
                 inline: false,
             },
             {
-                name: "**— Edit or remove your role:**",
+                name: "**Edit or remove your role:**",
                 value: 
-                    "`u!editrole name \"New Name\"` — Rename your custom role\n" +
-                    "`u!editrole color #RRGGBB` — Change your role to a solid colour\n" +
-                    "`u!editrole color #RRGGBB #RRGGBB` — Change your role to a gradient\n" +
-                    "`u!editrole color holographic` — Change your role to holographic\n" +
-                    "`u!removerole` — Delete your custom role",
+                    "`u!editrole name \"New Name\"` - Rename your custom role\n" +
+                    "`u!editrole color #RRGGBB` - Change your role to a solid colour\n" +
+                    "`u!editrole color #RRGGBB #RRGGBB` - Change your role to a gradient\n" +
+                    "`u!editrole color holographic` - Change your role to holographic\n" +
+                    "`u!removerole` - Delete your custom role",
                 inline: false,
             },
             {
-                name: "**— Preset Character Gradient Roles**",
+                name: "**Preset Character Gradient Roles**",
                 value: "`u!chooserole Haruka | Touma | Minami | Torao`",
                 inline: false,
             },
