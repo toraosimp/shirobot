@@ -1886,8 +1886,8 @@ async function handleHelp(message) {
                 inline: false,
             },
             {
-                name: "**Custom Role Commands** *(Server Boosters, Mods & Mod Helpers only)*",
-                value: "Create and manage your own personal role with a custom name and colour!\n\n" +
+                name: "**Custom Role Commands**",
+                value: "Create and manage your own personal role with a custom name and colour!\n" +
                     "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
                     "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Boost Level 2)*\n" +
                     "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Boost Level 2)*\n" +
