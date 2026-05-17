@@ -1891,7 +1891,6 @@ async function handleHelp(message) {
                     "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
                     "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Boost Level 2)*\n" +
                     "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Boost Level 2)*\n" +
-                    "`u!createrole \"Role Name\"` — Create a role and get prompted to choose a style interactively\n\n" +
                     "`u!editrole name \"New Name\"` — Rename your custom role\n" +
                     "`u!editrole color #RRGGBB` — Change your role to a solid colour\n" +
                     "`u!editrole color #RRGGBB #RRGGBB` — Change your role to a gradient\n" +
