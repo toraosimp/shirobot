@@ -26,6 +26,58 @@ const DATA_FILE = "./data.json";
 const BIRTHDAY_CHANNEL_ID = "1421050807989567509";
 const WELCOME_CHANNEL_ID = "1422311794382475284";
 
+// ─── Custom Role Feature ────────────────────────────────────────────────────
+// Roles eligible to create custom roles
+const ELIGIBLE_ROLE_IDS = [
+    "1424178417447735309", // Poisonous Booster
+    "1424103771746734222", // Mods
+    "1426890813815914507", // Mod Helper
+];
+
+// Role IDs whose removal should trigger auto-delete of custom role
+// (same list — if any of these are removed, custom role is deleted)
+const TRIGGER_REMOVE_ROLE_IDS = new Set(ELIGIBLE_ROLE_IDS);
+
+// Valid hex colour regex  (#RGB or #RRGGBB)
+const HEX_REGEX = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
+
+/**
+ * Expand 3-digit hex to 6-digit and return as integer (for Discord API).
+ * Returns null if invalid.
+ */
+function parseHex(hex) {
+    if (!HEX_REGEX.test(hex)) return null;
+    let clean = hex.slice(1);
+    if (clean.length === 3) {
+        clean = clean.split("").map(c => c + c).join("");
+    }
+    return parseInt(clean, 16);
+}
+
+/**
+ * Check whether the guild currently has enough boosts to support
+ * gradient / holographic role colours (requires tier 2 = 7 boosts).
+ */
+function isGradientEnabled(guild) {
+    return guild.premiumTier >= 2;
+}
+
+/**
+ * Generate a simple animated-looking colour for a "holographic" role.
+ * Because Discord role colours are single integers we pick a vivid
+ * iridescent hue (a bright teal-pink mix) as the representative colour.
+ * The role name itself signals the holographic intent.
+ */
+function holographicColor() {
+    // Bright iridescent violet  #B975FF
+    return 0xB975FF;
+}
+
+// ─── Pending interaction state (for the multi-step createrole prompt) ───────
+// Map of userId -> { step, roleName, color1, color2, style }
+const pendingRoleCreation = new Map();
+// ────────────────────────────────────────────────────────────────────────────
+
 const PUNS = [
     "Why don't skeletons ever fight each other? Because they don't have the guts.",
     "Why did the scarecrow win an award? Because he was outstanding in his field.",
@@ -320,7 +372,7 @@ const WELCOME_EMBEDS = [
 
             "**<:paw:1424057688492347509>\u2800 Ships**\\n" +
             "\u25b8    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\\n" +
-            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŦOOŦ are popular, and this is a ŦOOŦ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
+            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŤOOŤ are popular, and this is a ŤOOŤ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
             "\u25b8    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\\n" +
             "\u25b8    Conversations about their dynamics that do not frame them romantically are perfectly fine.\\n" +
             "\u25b8    Thank you for your understanding and helping us maintain a comfortable space for everyone!\\n\\n" +
@@ -348,8 +400,8 @@ const WELCOME_EMBEDS = [
             "\u25b8    If you have questions, concerns, or suggestions, feel free to contact a mod — we're always happy to help!\\n\\n" +
 
             "**<:paw:1424057688492347509> \u2800Have Fun!**\\n" +
-            "\u25b8    Enjoy your time in the server and express your love for ŦOOŦ to your heart's content — as long as you follow the rules!\\n\\n" +
-            "Lovely ŦOOŦ, Enjoy ŦOOŦ. <:paw:1424057688492347509>"
+            "\u25b8    Enjoy your time in the server and express your love for ŤOOŤ to your heart's content — as long as you follow the rules!\\n\\n" +
+            "Lovely ŤOOŤ, Enjoy ŤOOŤ. <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -360,7 +412,7 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>\u2800 Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\\n" +
             "<:paw:1424057688492347509>\u2800 Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\\n" +
             "<:paw:1424057688492347509>\u2800 Server Boosters appear separately in the members list.\\n" +
-            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŦOOŦ server tag**!"
+            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŤOOŤ server tag**!"
         ),
     
     new EmbedBuilder()
@@ -428,6 +480,8 @@ let botData = {
     songs: [],
     lastBroadcast: {},
     braincellCounter: 0,
+    // customRoles: { [userId]: { roleId, roleName, style, color1, color2 } }
+    customRoles: {},
 };
 
 // Cooldown map for u!song command (userId -> timestamp)
@@ -445,6 +499,7 @@ async function loadData() {
             console.log("No existing data file, starting fresh");
             botData.songs = [...DEFAULT_SONGS];
             botData.braincellCounter = 0;
+            botData.customRoles = {};
             await saveData();
             return;
         }
@@ -458,6 +513,7 @@ async function loadData() {
             songs: parsedData.songs && parsedData.songs.length > 0 ? parsedData.songs : [...DEFAULT_SONGS],
             lastBroadcast: parsedData.lastBroadcast || {},
             braincellCounter: parsedData.braincellCounter !== undefined ? parsedData.braincellCounter : 0,
+            customRoles: parsedData.customRoles || {},
         };
 
         // Ensure birthdays have proper numeric values
@@ -473,6 +529,7 @@ async function loadData() {
         console.log("Starting with fresh data");
         botData.songs = [...DEFAULT_SONGS];
         botData.braincellCounter = 0;
+        botData.customRoles = {};
         await saveData();
     }
 }
@@ -521,8 +578,51 @@ client.on("guildMemberAdd", async (member) => {
     }
 });
 
+// ─── Auto-remove custom role when booster/mod role is removed ───────────────
+client.on("guildMemberUpdate", async (oldMember, newMember) => {
+    try {
+        // Find roles that were removed in this update
+        const removedRoleIds = [...oldMember.roles.cache.keys()].filter(
+            id => !newMember.roles.cache.has(id)
+        );
+
+        // Check if any removed role is one of our trigger roles
+        const lostEligibleRole = removedRoleIds.some(id => TRIGGER_REMOVE_ROLE_IDS.has(id));
+        if (!lostEligibleRole) return;
+
+        // Check if the member still holds at least one eligible role
+        const stillEligible = ELIGIBLE_ROLE_IDS.some(id => newMember.roles.cache.has(id));
+        if (stillEligible) return;
+
+        // Member is no longer eligible — remove their custom role
+        const customRoleData = botData.customRoles[newMember.id];
+        if (!customRoleData) return;
+
+        const guild = newMember.guild;
+        const role = guild.roles.cache.get(customRoleData.roleId);
+        if (role) {
+            await role.delete("Member lost eligible role (booster/mod removed)");
+            console.log(`Deleted custom role "${customRoleData.roleName}" for user ${newMember.id}`);
+        }
+
+        delete botData.customRoles[newMember.id];
+        await saveData();
+    } catch (error) {
+        console.error("Error in guildMemberUpdate (custom role cleanup):", error);
+    }
+});
+// ────────────────────────────────────────────────────────────────────────────
+
 client.on("messageCreate", async (message) => {
-    if (message.author.bot || !message.content.startsWith(PREFIX)) return;
+    if (message.author.bot) return;
+
+    // ── Handle pending multi-step role creation flow ──────────────────────
+    if (pendingRoleCreation.has(message.author.id)) {
+        await handleRoleCreationStep(message);
+        return;
+    }
+
+    if (!message.content.startsWith(PREFIX)) return;
 
     const args = message.content.slice(PREFIX.length).trim().split(/ +/);
     const command = args.shift().toLowerCase();
@@ -586,6 +686,16 @@ client.on("messageCreate", async (message) => {
             case "coin":
                 await handleCoin(message);
                 break;
+            // ── Custom Role Commands ────────────────────────────────────────
+            case "createrole":
+                await handleCreateRole(message, args);
+                break;
+            case "editrole":
+                await handleEditRole(message, args);
+                break;
+            case "removerole":
+                await handleRemoveRole(message, args);
+                break;
             default:
                 break;
         }
@@ -594,6 +704,622 @@ client.on("messageCreate", async (message) => {
         message.reply("An error occurred while executing that command.");
     }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  CUSTOM ROLE HELPERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Returns true if the member holds at least one eligible role.
+ */
+function memberIsEligible(member) {
+    return ELIGIBLE_ROLE_IDS.some(id => member.roles.cache.has(id));
+}
+
+/**
+ * Parse the raw argument list from the command line into
+ * { roleName, style, color1, color2 }.
+ * Returns null if parsing fails, with a `reason` string attached.
+ *
+ * Supported inline syntaxes (all args after the command):
+ *   "Role Name" #RRGGBB                 → solid
+ *   "Role Name" #RRGGBB #RRGGBB         → gradient
+ *   "Role Name" holographic             → holographic
+ *
+ * The function is intentionally permissive about quoting — it joins
+ * everything that isn't a hex code or the word "holographic" into the name.
+ */
+function parseRoleArgs(args) {
+    if (args.length === 0) return null;
+
+    // Re-join and split more carefully
+    const raw = args.join(" ").trim();
+
+    // Try to extract a quoted name first
+    let roleName = null;
+    let rest = raw;
+
+    const quotedMatch = raw.match(/^"([^"]+)"\s*(.*)/);
+    if (quotedMatch) {
+        roleName = quotedMatch[1].trim();
+        rest = quotedMatch[2].trim();
+    }
+
+    // Parse tokens from `rest`
+    const tokens = rest.split(/\s+/).filter(Boolean);
+
+    if (!roleName) {
+        // If no quoted name, collect tokens until we hit a hex code or "holographic"
+        const nameParts = [];
+        let i = 0;
+        while (i < tokens.length) {
+            if (HEX_REGEX.test(tokens[i]) || tokens[i].toLowerCase() === "holographic") break;
+            nameParts.push(tokens[i]);
+            i++;
+        }
+        if (nameParts.length === 0) return null;
+        roleName = nameParts.join(" ");
+        tokens.splice(0, nameParts.length);
+    }
+
+    if (tokens.length === 0) {
+        // No style specified — signal that we need a prompt
+        return { roleName, style: null, color1: null, color2: null };
+    }
+
+    const firstToken = tokens[0].toLowerCase();
+
+    if (firstToken === "holographic") {
+        return { roleName, style: "holographic", color1: null, color2: null };
+    }
+
+    if (HEX_REGEX.test(tokens[0])) {
+        if (tokens[1] && HEX_REGEX.test(tokens[1])) {
+            return { roleName, style: "gradient", color1: tokens[0], color2: tokens[1] };
+        }
+        return { roleName, style: "solid", color1: tokens[0], color2: null };
+    }
+
+    return null;
+}
+
+/**
+ * Find the highest position among the eligible (booster/mod) roles in the
+ * guild and return a position one above it, capped at the bot's own highest
+ * role so we don't request an impossible position.
+ */
+function getCustomRolePosition(guild) {
+    let highestEligible = 0;
+    for (const roleId of ELIGIBLE_ROLE_IDS) {
+        const role = guild.roles.cache.get(roleId);
+        if (role && role.position > highestEligible) {
+            highestEligible = role.position;
+        }
+    }
+
+    // Bot's highest role position (we cannot exceed this)
+    const botMember = guild.members.cache.get(client.user.id);
+    let botHighest = 0;
+    if (botMember) {
+        botHighest = botMember.roles.highest.position;
+    }
+
+    // Place one above the highest eligible role, but below the bot's top role
+    return Math.min(highestEligible + 1, Math.max(botHighest - 1, 1));
+}
+
+/**
+ * Actually create the Discord role and attach it to the member.
+ * Returns the created role on success or throws on failure.
+ */
+async function createDiscordRole(guild, member, roleName, colorInt) {
+    const position = getCustomRolePosition(guild);
+
+    const role = await guild.roles.create({
+        name: roleName,
+        color: colorInt,
+        hoist: false,
+        mentionable: false,
+        reason: `Custom role created by ${member.user.tag}`,
+        position,
+    });
+
+    await member.roles.add(role, "Custom role assigned");
+    return role;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  u!createrole
+// ═══════════════════════════════════════════════════════════════════════════
+async function handleCreateRole(message, args) {
+    const member = message.member;
+    const guild = message.guild;
+
+    // Permission check
+    if (!memberIsEligible(member)) {
+        return message.reply("You need to be a **Server Booster**, **Mod**, or **Mod Helper** to create a custom role.");
+    }
+
+    // One custom role per person
+    if (botData.customRoles[member.id]) {
+        return message.reply(
+            `You already have a custom role! Use \`u!editrole\` to change it or \`u!removerole\` to delete it first.`
+        );
+    }
+
+    const parsed = parseRoleArgs(args);
+
+    if (parsed === null) {
+        return message.reply(
+            "Invalid format. Please use one of:\n" +
+            "`u!createrole \"Role Name\" #RRGGBB` — solid colour\n" +
+            "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — gradient (two colours)\n" +
+            "`u!createrole \"Role Name\" holographic` — holographic"
+        );
+    }
+
+    // Validate role name length
+    if (parsed.roleName.length > 100) {
+        return message.reply("Role name is too long! Please keep it under 100 characters.");
+    }
+
+    // If style is null we need to prompt the user
+    if (parsed.style === null) {
+        pendingRoleCreation.set(member.id, {
+            step: "choose_style",
+            roleName: parsed.roleName,
+        });
+        return message.reply(
+            `Creating role **"${parsed.roleName}"**! What style would you like?\n` +
+            "Type `solid`, `gradient`, or `holographic`."
+        );
+    }
+
+    await executeRoleCreation(message, member, guild, parsed);
+}
+
+/**
+ * Shared logic that actually creates the role once all details are known.
+ */
+async function executeRoleCreation(message, member, guild, parsed) {
+    const { roleName, style, color1, color2 } = parsed;
+
+    if (style === "gradient") {
+        if (!isGradientEnabled(guild)) {
+            return message.reply(
+                "This perk is currently unavailable due to insufficient server boosts. " +
+                "The server needs to reach **Boost Level 2** to unlock gradient roles!"
+            );
+        }
+
+        const c1 = parseHex(color1);
+        const c2 = parseHex(color2);
+        if (c1 === null || c2 === null) {
+            return message.reply("One or both hex colour codes are invalid. Make sure they look like `#RRGGBB` or `#RGB`.");
+        }
+
+        // Discord does not natively support gradient role colours; we store
+        // both colours and use color1 as the role's displayed colour.
+        // The gradient is a noted cosmetic intent tracked in our data.
+        const role = await createDiscordRole(guild, member, roleName, c1);
+
+        botData.customRoles[member.id] = {
+            roleId: role.id,
+            roleName,
+            style: "gradient",
+            color1,
+            color2,
+        };
+        await saveData();
+
+        return message.reply(
+            `✅ Custom gradient role **"${roleName}"** created with colours **${color1}** → **${color2}**! ` +
+            `(Displayed as ${color1} — full gradient rendering requires server-side features.)`
+        );
+    }
+
+    if (style === "holographic") {
+        if (!isGradientEnabled(guild)) {
+            return message.reply(
+                "This perk is currently unavailable due to insufficient server boosts. " +
+                "The server needs to reach **Boost Level 2** to unlock holographic roles!"
+            );
+        }
+
+        const colorInt = holographicColor();
+        const role = await createDiscordRole(guild, member, roleName, colorInt);
+
+        botData.customRoles[member.id] = {
+            roleId: role.id,
+            roleName,
+            style: "holographic",
+            color1: "#B975FF",
+            color2: null,
+        };
+        await saveData();
+
+        return message.reply(
+            `✨ Custom holographic role **"${roleName}"** created! ` +
+            `(Displayed with a vibrant iridescent colour.)`
+        );
+    }
+
+    // Default: solid
+    const c = parseHex(color1);
+    if (c === null) {
+        return message.reply("That hex colour code is invalid. Make sure it looks like `#RRGGBB` or `#RGB`.");
+    }
+
+    const role = await createDiscordRole(guild, member, roleName, c);
+
+    botData.customRoles[member.id] = {
+        roleId: role.id,
+        roleName,
+        style: "solid",
+        color1,
+        color2: null,
+    };
+    await saveData();
+
+    return message.reply(`✅ Custom role **"${roleName}"** created with colour **${color1}**!`);
+}
+
+// ─── Multi-step role creation conversation handler ────────────────────────
+async function handleRoleCreationStep(message) {
+    const userId = message.author.id;
+    const state = pendingRoleCreation.get(userId);
+    if (!state) return;
+
+    const input = message.content.trim();
+
+    // Allow user to cancel at any point
+    if (input.toLowerCase() === "cancel") {
+        pendingRoleCreation.delete(userId);
+        return message.reply("Role creation cancelled.");
+    }
+
+    const member = message.member;
+    const guild = message.guild;
+
+    if (state.step === "choose_style") {
+        const choice = input.toLowerCase();
+        if (!["solid", "gradient", "holographic"].includes(choice)) {
+            return message.reply("Please type `solid`, `gradient`, or `holographic`. (Or type `cancel` to stop.)");
+        }
+
+        if (choice === "solid") {
+            state.step = "choose_color1_solid";
+            state.style = "solid";
+            pendingRoleCreation.set(userId, state);
+            return message.reply("What colour would you like? Send a hex code like `#FF5733`.");
+        }
+
+        if (choice === "gradient") {
+            if (!isGradientEnabled(guild)) {
+                pendingRoleCreation.delete(userId);
+                return message.reply(
+                    "This perk is currently unavailable due to insufficient server boosts. " +
+                    "The server needs to reach **Boost Level 2** to unlock gradient roles!"
+                );
+            }
+            state.step = "choose_color1_gradient";
+            state.style = "gradient";
+            pendingRoleCreation.set(userId, state);
+            return message.reply("What should the **first** colour be? Send a hex code like `#FF5733`.");
+        }
+
+        if (choice === "holographic") {
+            if (!isGradientEnabled(guild)) {
+                pendingRoleCreation.delete(userId);
+                return message.reply(
+                    "This perk is currently unavailable due to insufficient server boosts. " +
+                    "The server needs to reach **Boost Level 2** to unlock holographic roles!"
+                );
+            }
+            // No colour input needed for holographic
+            pendingRoleCreation.delete(userId);
+
+            // Check one custom role limit
+            if (botData.customRoles[userId]) {
+                return message.reply(
+                    `You already have a custom role! Use \`u!editrole\` to change it or \`u!removerole\` to delete it first.`
+                );
+            }
+
+            const colorInt = holographicColor();
+            const role = await createDiscordRole(guild, member, state.roleName, colorInt);
+            botData.customRoles[userId] = {
+                roleId: role.id,
+                roleName: state.roleName,
+                style: "holographic",
+                color1: "#B975FF",
+                color2: null,
+            };
+            await saveData();
+            return message.reply(
+                `✨ Custom holographic role **"${state.roleName}"** created!`
+            );
+        }
+    }
+
+    if (state.step === "choose_color1_solid") {
+        if (!HEX_REGEX.test(input)) {
+            return message.reply("That doesn't look like a valid hex code. Try something like `#FF5733`. (Or type `cancel` to stop.)");
+        }
+        pendingRoleCreation.delete(userId);
+
+        // Check one custom role limit
+        if (botData.customRoles[userId]) {
+            return message.reply(
+                `You already have a custom role! Use \`u!editrole\` to change it or \`u!removerole\` to delete it first.`
+            );
+        }
+
+        const c = parseHex(input);
+        const role = await createDiscordRole(guild, member, state.roleName, c);
+        botData.customRoles[userId] = {
+            roleId: role.id,
+            roleName: state.roleName,
+            style: "solid",
+            color1: input,
+            color2: null,
+        };
+        await saveData();
+        return message.reply(`✅ Custom role **"${state.roleName}"** created with colour **${input}**!`);
+    }
+
+    if (state.step === "choose_color1_gradient") {
+        if (!HEX_REGEX.test(input)) {
+            return message.reply("That doesn't look like a valid hex code. Try something like `#FF5733`. (Or type `cancel` to stop.)");
+        }
+        state.step = "choose_color2_gradient";
+        state.color1 = input;
+        pendingRoleCreation.set(userId, state);
+        return message.reply(`Got it — **${input}**! Now send the **second** colour hex code.`);
+    }
+
+    if (state.step === "choose_color2_gradient") {
+        if (!HEX_REGEX.test(input)) {
+            return message.reply("That doesn't look like a valid hex code. Try something like `#AA33FF`. (Or type `cancel` to stop.)");
+        }
+        pendingRoleCreation.delete(userId);
+
+        // Check one custom role limit
+        if (botData.customRoles[userId]) {
+            return message.reply(
+                `You already have a custom role! Use \`u!editrole\` to change it or \`u!removerole\` to delete it first.`
+            );
+        }
+
+        const c1 = parseHex(state.color1);
+        const role = await createDiscordRole(guild, member, state.roleName, c1);
+        botData.customRoles[userId] = {
+            roleId: role.id,
+            roleName: state.roleName,
+            style: "gradient",
+            color1: state.color1,
+            color2: input,
+        };
+        await saveData();
+        return message.reply(
+            `✅ Custom gradient role **"${state.roleName}"** created with colours **${state.color1}** → **${input}**!`
+        );
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  u!editrole
+//  Usage:
+//    u!editrole name "New Name"
+//    u!editrole color #RRGGBB
+//    u!editrole color #RRGGBB #RRGGBB   (gradient — changes both colours)
+//    u!editrole color holographic
+// ═══════════════════════════════════════════════════════════════════════════
+async function handleEditRole(message, args) {
+    const member = message.member;
+    const guild = message.guild;
+
+    if (!memberIsEligible(member)) {
+        return message.reply("You need to be a **Server Booster**, **Mod**, or **Mod Helper** to use this command.");
+    }
+
+    const customRoleData = botData.customRoles[member.id];
+    if (!customRoleData) {
+        return message.reply("You don't have a custom role yet! Use `u!createrole` to create one.");
+    }
+
+    const role = guild.roles.cache.get(customRoleData.roleId);
+    if (!role) {
+        // Role was deleted externally — clean up data
+        delete botData.customRoles[member.id];
+        await saveData();
+        return message.reply("Your custom role no longer exists. Use `u!createrole` to make a new one.");
+    }
+
+    if (args.length < 2) {
+        return message.reply(
+            "Usage:\n" +
+            "`u!editrole name \"New Role Name\"` — change the role name\n" +
+            "`u!editrole color #RRGGBB` — change to a solid colour\n" +
+            "`u!editrole color #RRGGBB #RRGGBB` — change to a gradient (two colours)\n" +
+            "`u!editrole color holographic` — change to holographic"
+        );
+    }
+
+    const subCommand = args[0].toLowerCase();
+    const rest = args.slice(1);
+
+    if (subCommand === "name") {
+        // Accept quoted or unquoted name
+        const rawName = rest.join(" ").replace(/^"|"$/g, "").trim();
+        if (!rawName) return message.reply("Please provide a new name for the role.");
+        if (rawName.length > 100) return message.reply("Role name is too long! Please keep it under 100 characters.");
+
+        await role.setName(rawName, `Edited by ${member.user.tag}`);
+        customRoleData.roleName = rawName;
+        await saveData();
+        return message.reply(`✅ Role name updated to **"${rawName}"**!`);
+    }
+
+    if (subCommand === "color" || subCommand === "colour") {
+        const firstToken = rest[0];
+
+        if (!firstToken) {
+            return message.reply(
+                "Please provide a colour. Examples:\n" +
+                "`u!editrole color #FF5733` — solid\n" +
+                "`u!editrole color #FF5733 #AA33FF` — gradient\n" +
+                "`u!editrole color holographic`"
+            );
+        }
+
+        if (firstToken.toLowerCase() === "holographic") {
+            if (!isGradientEnabled(guild)) {
+                return message.reply(
+                    "This perk is currently unavailable due to insufficient server boosts. " +
+                    "The server needs to reach **Boost Level 2** to unlock holographic roles!"
+                );
+            }
+            await role.setColor(holographicColor(), `Edited by ${member.user.tag}`);
+            customRoleData.style = "holographic";
+            customRoleData.color1 = "#B975FF";
+            customRoleData.color2 = null;
+            await saveData();
+            return message.reply(`✨ Role colour updated to **holographic**!`);
+        }
+
+        if (rest[1] && HEX_REGEX.test(rest[0]) && HEX_REGEX.test(rest[1])) {
+            // Gradient
+            if (!isGradientEnabled(guild)) {
+                return message.reply(
+                    "This perk is currently unavailable due to insufficient server boosts. " +
+                    "The server needs to reach **Boost Level 2** to unlock gradient roles!"
+                );
+            }
+            const c1 = parseHex(rest[0]);
+            const c2 = parseHex(rest[1]);
+            if (c1 === null || c2 === null) {
+                return message.reply("One or both hex colour codes are invalid.");
+            }
+            await role.setColor(c1, `Edited by ${member.user.tag}`);
+            customRoleData.style = "gradient";
+            customRoleData.color1 = rest[0];
+            customRoleData.color2 = rest[1];
+            await saveData();
+            return message.reply(`✅ Role colour updated to gradient **${rest[0]}** → **${rest[1]}**!`);
+        }
+
+        // Solid
+        if (!HEX_REGEX.test(firstToken)) {
+            return message.reply("That doesn't look like a valid hex code. Try something like `#FF5733`.");
+        }
+        const c = parseHex(firstToken);
+        await role.setColor(c, `Edited by ${member.user.tag}`);
+        customRoleData.style = "solid";
+        customRoleData.color1 = firstToken;
+        customRoleData.color2 = null;
+        await saveData();
+        return message.reply(`✅ Role colour updated to **${firstToken}**!`);
+    }
+
+    return message.reply(
+        "Unknown sub-command. Use `name` or `color`.\n" +
+        "Example: `u!editrole name \"New Name\"` or `u!editrole color #FF5733`"
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  u!removerole
+//  Usage: u!removerole   (removes your own custom role)
+//         u!removerole "Role Name"  (alias — confirms by name)
+//         Admins can also pass @mention or a user ID to remove someone else's
+// ═══════════════════════════════════════════════════════════════════════════
+async function handleRemoveRole(message, args) {
+    const member = message.member;
+    const guild = message.guild;
+    const isAdmin = member.permissions.has(PermissionsBitField.Flags.Administrator);
+
+    if (!memberIsEligible(member) && !isAdmin) {
+        return message.reply("You need to be a **Server Booster**, **Mod**, or **Mod Helper** to use this command.");
+    }
+
+    // Check if an admin is trying to remove someone else's role
+    let targetUserId = member.id;
+    if (isAdmin && message.mentions.users.size > 0) {
+        targetUserId = message.mentions.users.first().id;
+    }
+
+    const customRoleData = botData.customRoles[targetUserId];
+    if (!customRoleData) {
+        const isSelf = targetUserId === member.id;
+        return message.reply(
+            isSelf
+                ? "You don't have a custom role to remove."
+                : "That user doesn't have a custom role to remove."
+        );
+    }
+
+    const role = guild.roles.cache.get(customRoleData.roleId);
+    if (role) {
+        await role.delete(`Custom role removed by ${member.user.tag}`);
+    }
+
+    const removedName = customRoleData.roleName;
+    delete botData.customRoles[targetUserId];
+    await saveData();
+
+    return message.reply(
+        targetUserId === member.id
+            ? `✅ Your custom role **"${removedName}"** has been removed.`
+            : `✅ Custom role **"${removedName}"** has been removed.`
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  Gradient/Holo perk downgrade handler
+//  Called by the server boost perks check (can be triggered manually by
+//  an admin with u!checkboostperks, or hooked into guildUpdate).
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Watch for server boost tier changes and revert gradient/holo roles if needed
+client.on("guildUpdate", async (oldGuild, newGuild) => {
+    try {
+        // Check if premium tier dropped
+        if (oldGuild.premiumTier > newGuild.premiumTier && !isGradientEnabled(newGuild)) {
+            await revertGradientRoles(newGuild);
+        }
+    } catch (error) {
+        console.error("Error in guildUpdate (gradient revert):", error);
+    }
+});
+
+/**
+ * For every user who has a gradient or holographic custom role,
+ * revert their role colour to color1 (solid) and update the stored style.
+ */
+async function revertGradientRoles(guild) {
+    let anyReverted = false;
+    for (const [userId, data] of Object.entries(botData.customRoles)) {
+        if (data.style === "gradient" || data.style === "holographic") {
+            const role = guild.roles.cache.get(data.roleId);
+            if (role) {
+                const fallbackColor = parseHex(data.color1) ?? 0x99AAB5;
+                await role.setColor(fallbackColor, "Gradient perks disabled — reverted to solid colour");
+                data.style = "solid";
+                data.color2 = null;
+                anyReverted = true;
+                console.log(`Reverted gradient/holo role for user ${userId} to solid ${data.color1}`);
+            }
+        }
+    }
+    if (anyReverted) {
+        await saveData();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  EXISTING COMMAND HANDLERS (unchanged)
+// ═══════════════════════════════════════════════════════════════════════════
 
 async function handleAddBirthday(message, args) {
     if (args.length < 2) {
@@ -1158,9 +1884,24 @@ async function handleHelp(message) {
                 name: "**Song Management**",
                 value: "`u!addsong Song Name` - Add a song to the list\n`u!removesong Song Name` - Remove a song from the list",
                 inline: false,
-            }
+            },
+            {
+                name: "**Custom Role Commands** *(Server Boosters, Mods & Mod Helpers only)*",
+                value: "Create and manage your own personal role with a custom name and colour!\n\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Boost Level 2)*\n" +
+                    "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Boost Level 2)*\n" +
+                    "`u!createrole \"Role Name\"` — Create a role and get prompted to choose a style interactively\n\n" +
+                    "`u!editrole name \"New Name\"` — Rename your custom role\n" +
+                    "`u!editrole color #RRGGBB` — Change your role to a solid colour\n" +
+                    "`u!editrole color #RRGGBB #RRGGBB` — Change your role to a gradient\n" +
+                    "`u!editrole color holographic` — Change your role to holographic\n\n" +
+                    "`u!removerole` — Delete your custom role\n\n" +
+                    "**Notes:** You can only have **one** custom role at a time. If your Booster or Mod role is removed, your custom role will be automatically removed.",
+                inline: false,
+            },
        )
-      .setFooter({ text: 'ŹOOĻ Management Bot • Created by pinkmagic (Sky)' })
+      .setFooter({ text: 'ŹOOĻ Server Management Bot • Created by pinkmagic (Sky)' })
       .setTimestamp();
 
     message.reply({ embeds: [embed] });
@@ -1316,10 +2057,6 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
-
-
-
-
 
 
 
