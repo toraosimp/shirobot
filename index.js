@@ -372,7 +372,7 @@ const WELCOME_EMBEDS = [
 
             "**<:paw:1424057688492347509>\u2800 Ships**\\n" +
             "\u25b8    Incestuous ships and romantic pairings between a minor (17 or under) and an adult (20+) **are not allowed here**.\\n" +
-            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŤOOŤ are popular, and this is a ŤOOŤ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
+            "\u25b8    We understand that ships like Touma × Haruka, Torao × Haruka, and PolyŹOOĻ are popular, and this is a ŹOOĻ server after all! We want this to remain a space where everyone feels welcome and comfortable.\\n" +
             "\u25b8    However, many members are simply uncomfortable with ships that pair a minor with an adult. Because of this, we kindly ask that **any discussion of these ships be kept private** — either in DMs or outside the server! We believe this is the best way to ensure the server remains comfortable for everyone.\\n" +
             "\u25b8    Conversations about their dynamics that do not frame them romantically are perfectly fine.\\n" +
             "\u25b8    Thank you for your understanding and helping us maintain a comfortable space for everyone!\\n\\n" +
@@ -400,8 +400,8 @@ const WELCOME_EMBEDS = [
             "\u25b8    If you have questions, concerns, or suggestions, feel free to contact a mod — we're always happy to help!\\n\\n" +
 
             "**<:paw:1424057688492347509> \u2800Have Fun!**\\n" +
-            "\u25b8    Enjoy your time in the server and express your love for ŤOOŤ to your heart's content — as long as you follow the rules!\\n\\n" +
-            "Lovely ŤOOŤ, Enjoy ŤOOŤ. <:paw:1424057688492347509>"
+            "\u25b8    Enjoy your time in the server and express your love for ŹOOĻ to your heart's content — as long as you follow the rules!\\n\\n" +
+            "Lovely ŹOOĻ, Enjoy ŹOOĻ. <:paw:1424057688492347509>"
         ),
     
     new EmbedBuilder()
@@ -412,7 +412,7 @@ const WELCOME_EMBEDS = [
             "<:paw:1424057688492347509>\u2800 Receive the **<@&1424178417447735309>** role and badge next to your name immediately.\\n" +
             "<:paw:1424057688492347509>\u2800 Gain **custom roles, titles, normal or gradient role colors, and role icons** (once we unlock Level 2)!\\n" +
             "<:paw:1424057688492347509>\u2800 Server Boosters appear separately in the members list.\\n" +
-            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŤOOŤ server tag**!"
+            "<:paw:1424057688492347509>\u2800 Boosting also helps us maintain the **ŹOOĻ server tag**!"
         ),
     
     new EmbedBuilder()
