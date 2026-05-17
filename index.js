@@ -55,11 +55,13 @@ function parseHex(hex) {
 }
 
 /**
- * Check whether the guild currently has enough boosts to support
- * gradient / holographic role colours (requires tier 2 = 7 boosts).
+ * Check whether the guild has the Enhanced Styles perk enabled,
+ * which is required for gradient / holographic role colours.
+ * We check the guild's features for 'ROLE_ICONS', which is the
+ * feature flag that becomes available when Enhanced Styles is active.
  */
 function isGradientEnabled(guild) {
-    return guild.premiumTier >= 2;
+    return guild.features.has('ROLE_ICONS');
 }
 
 /**
@@ -686,6 +688,9 @@ client.on("messageCreate", async (message) => {
             case "coin":
                 await handleCoin(message);
                 break;
+            case "chooserole":
+                await handleChooseRole(message, args);
+                break;
             // ── Custom Role Commands ────────────────────────────────────────
             case "createrole":
                 await handleCreateRole(message, args);
@@ -863,16 +868,10 @@ async function handleCreateRole(message, args) {
         return message.reply("Role name is too long! Please keep it under 100 characters.");
     }
 
-    // If style is null we need to prompt the user
+    // If style is null the user provided only a name \u2014 create with no colour
     if (parsed.style === null) {
-        pendingRoleCreation.set(member.id, {
-            step: "choose_style",
-            roleName: parsed.roleName,
-        });
-        return message.reply(
-            `Creating role **"${parsed.roleName}"**! What style would you like?\n` +
-            "Type `solid`, `gradient`, or `holographic`."
-        );
+        await executeRoleCreation(message, member, guild, { roleName: parsed.roleName, style: "none", color1: null, color2: null });
+        return;
     }
 
     await executeRoleCreation(message, member, guild, parsed);
@@ -887,8 +886,7 @@ async function executeRoleCreation(message, member, guild, parsed) {
     if (style === "gradient") {
         if (!isGradientEnabled(guild)) {
             return message.reply(
-                "This perk is currently unavailable due to insufficient server boosts. " +
-                "The server needs to reach **Boost Level 2** to unlock gradient roles!"
+                "This perk is currently unavailable due to insufficient server boosts. "
             );
         }
 
@@ -921,8 +919,7 @@ async function executeRoleCreation(message, member, guild, parsed) {
     if (style === "holographic") {
         if (!isGradientEnabled(guild)) {
             return message.reply(
-                "This perk is currently unavailable due to insufficient server boosts. " +
-                "The server needs to reach **Boost Level 2** to unlock holographic roles!"
+                "This perk is currently unavailable due to insufficient server boosts. "
             );
         }
 
@@ -942,6 +939,22 @@ async function executeRoleCreation(message, member, guild, parsed) {
             `✨ Custom holographic role **"${roleName}"** created! ` +
             `(Displayed with a vibrant iridescent colour.)`
         );
+    }
+
+    // No colour — create role that inherits colour from highest role
+    if (style === "none") {
+        const role = await createDiscordRole(guild, member, roleName, 0x000000);
+
+        botData.customRoles[member.id] = {
+            roleId: role.id,
+            roleName,
+            style: "none",
+            color1: null,
+            color2: null,
+        };
+        await saveData();
+
+        return message.reply(`✅ Custom role **"${roleName}"** created with no custom colour — it will show your highest role's colour!`);
     }
 
     // Default: solid
@@ -998,8 +1011,7 @@ async function handleRoleCreationStep(message) {
             if (!isGradientEnabled(guild)) {
                 pendingRoleCreation.delete(userId);
                 return message.reply(
-                    "This perk is currently unavailable due to insufficient server boosts. " +
-                    "The server needs to reach **Boost Level 2** to unlock gradient roles!"
+                    "This perk is currently unavailable due to insufficient server boosts. "
                 );
             }
             state.step = "choose_color1_gradient";
@@ -1012,8 +1024,7 @@ async function handleRoleCreationStep(message) {
             if (!isGradientEnabled(guild)) {
                 pendingRoleCreation.delete(userId);
                 return message.reply(
-                    "This perk is currently unavailable due to insufficient server boosts. " +
-                    "The server needs to reach **Boost Level 2** to unlock holographic roles!"
+                    "This perk is currently unavailable due to insufficient server boosts. "
                 );
             }
             // No colour input needed for holographic
@@ -1176,8 +1187,7 @@ async function handleEditRole(message, args) {
         if (firstToken.toLowerCase() === "holographic") {
             if (!isGradientEnabled(guild)) {
                 return message.reply(
-                    "This perk is currently unavailable due to insufficient server boosts. " +
-                    "The server needs to reach **Boost Level 2** to unlock holographic roles!"
+                    "This perk is currently unavailable due to insufficient server boosts. "
                 );
             }
             await role.setColor(holographicColor(), `Edited by ${member.user.tag}`);
@@ -1192,8 +1202,7 @@ async function handleEditRole(message, args) {
             // Gradient
             if (!isGradientEnabled(guild)) {
                 return message.reply(
-                    "This perk is currently unavailable due to insufficient server boosts. " +
-                    "The server needs to reach **Boost Level 2** to unlock gradient roles!"
+                    "This perk is currently unavailable due to insufficient server boosts. "
                 );
             }
             const c1 = parseHex(rest[0]);
@@ -1233,6 +1242,72 @@ async function handleEditRole(message, args) {
 //  Usage: u!removerole   (removes your own custom role)
 //         u!removerole "Role Name"  (alias — confirms by name)
 //         Admins can also pass @mention or a user ID to remove someone else's
+// ═════════════════════════════════════════════════════════════════════════════
+//  u!chooserole
+//  Usage: u!chooserole Haruka | Touma | Minami | Torao
+//         Assigns a preset gradient role with the chosen character's colours.
+// ═════════════════════════════════════════════════════════════════════════════
+const CHOOSEROLE_PRESETS = {
+    haruka: { color1: "#5f8677", color2: "#d4efe0" },
+    touma:  { color1: "#b2214f", color2: "#f9a7b5" },
+    minami: { color1: "#a99379", color2: "#f3e7dc" },
+    torao:  { color1: "#8e6770", color2: "#cfabbb" },
+};
+
+async function handleChooseRole(message, args) {
+    const member = message.member;
+    const guild = message.guild;
+
+    if (!memberIsEligible(member)) {
+        return message.reply("Only server boosters and members with other eligible roles can create custom roles!");
+    }
+
+    if (botData.customRoles[member.id]) {
+        return message.reply(
+            `You already have a custom role! Use \`u!editrole\` to change it or \`u!removerole\` to delete it first.`
+        );
+    }
+
+    if (args.length === 0) {
+        return message.reply(
+            "Please choose a character! Usage: `u!chooserole Haruka`, `u!chooserole Touma`, `u!chooserole Minami`, or `u!chooserole Torao`."
+        );
+    }
+
+    const choice = args[0].toLowerCase();
+    const preset = CHOOSEROLE_PRESETS[choice];
+
+    if (!preset) {
+        return message.reply(
+            "That's not a valid choice! Please use `u!chooserole Haruka`, `u!chooserole Touma`, `u!chooserole Minami`, or `u!chooserole Torao`."
+        );
+    }
+
+    // Capitalise the character name for the role label
+    const charName = choice.charAt(0).toUpperCase() + choice.slice(1);
+    const roleName = `${charName} Fan`;
+
+    const c1 = parseHex(preset.color1);
+
+    // Use color1 as the displayed role colour
+    const role = await createDiscordRole(guild, member, roleName, c1);
+
+    botData.customRoles[member.id] = {
+        roleId: role.id,
+        roleName,
+        style: "gradient",
+        color1: preset.color1,
+        color2: preset.color2,
+    };
+    await saveData();
+
+    return message.reply(
+        `✅ Created your **${charName}**-themed gradient role **"${roleName}"** ` +
+        `with colours **${preset.color1}** → **${preset.color2}**! ` +
+        `You can rename it anytime with \`u!editrole name "New Name"\`.`
+    );
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 async function handleRemoveRole(message, args) {
     const member = message.member;
@@ -1887,16 +1962,21 @@ async function handleHelp(message) {
             },
             {
                 name: "**Custom Role Commands**",
-                value: "Create and manage your own personal role with a custom name and colour!\n" +
+                value: "Create and manage your own personal role with a custom name and colour!\n\n" +
+                    "**— Create a custom role:**\n" +
+                    "`u!createrole \"Role Name\"` — Create a role with **no custom colour** (inherits your highest role's colour)\n" +
                     "`u!createrole \"Role Name\" #RRGGBB` — Create a role with a **solid** colour\n" +
-                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Boost Level 2)*\n" +
-                    "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Boost Level 2)*\n" +
+                    "`u!createrole \"Role Name\" #RRGGBB #RRGGBB` — Create a role with a **gradient** (two colours) *(requires Enhanced Styles perk)*\n" +
+                    "`u!createrole \"Role Name\" holographic` — Create a **holographic** role *(requires Enhanced Styles perk)*\n\n" +
+                    "**— Edit or remove your role:**\n" +
                     "`u!editrole name \"New Name\"` — Rename your custom role\n" +
                     "`u!editrole color #RRGGBB` — Change your role to a solid colour\n" +
                     "`u!editrole color #RRGGBB #RRGGBB` — Change your role to a gradient\n" +
-                    "`u!editrole color holographic` — Change your role to holographic\n\n" +
+                    "`u!editrole color holographic` — Change your role to holographic\n" +
                     "`u!removerole` — Delete your custom role\n\n" +
-                    "**Notes:** You can only have **one** custom role at a time. If your Booster or Mod role is removed, your custom role will be automatically removed.",
+                    "**— Create a role with preset character colours:**\n" +
+                    "`u!chooserole Haruka | Touma | Minami | Torao`\n" +
+                    "**Notes:** You can only have **one** custom role at a time. If your Booster or any other eligible role removed, your custom role will be automatically removed.",
                 inline: false,
             },
        )
@@ -2056,6 +2136,7 @@ process.on('SIGTERM', async () => {
 
 // Login
 client.login(process.env.DISCORD_BOT_TOKEN);
+
 
 
 
