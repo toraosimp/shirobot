@@ -837,7 +837,7 @@ async function handleCreateRole(message, args) {
 
     // Permission check
     if (!memberIsEligible(member)) {
-        return message.reply("You need to be a **Server Booster**, **Mod**, or **Mod Helper** to create a custom role.");
+        return message.reply("Only server boosters and members with other eligible roles can create custom roles!");
     }
 
     // One custom role per person
@@ -1120,7 +1120,7 @@ async function handleEditRole(message, args) {
     const guild = message.guild;
 
     if (!memberIsEligible(member)) {
-        return message.reply("You need to be a **Server Booster**, **Mod**, or **Mod Helper** to use this command.");
+        return message.reply("Only server boosters and members with other eligible roles can create custom roles!");
     }
 
     const customRoleData = botData.customRoles[member.id];
@@ -1240,7 +1240,7 @@ async function handleRemoveRole(message, args) {
     const isAdmin = member.permissions.has(PermissionsBitField.Flags.Administrator);
 
     if (!memberIsEligible(member) && !isAdmin) {
-        return message.reply("You need to be a **Server Booster**, **Mod**, or **Mod Helper** to use this command.");
+        return message.reply("Only server boosters and members with other eligible roles can create custom roles!");
     }
 
     // Check if an admin is trying to remove someone else's role
