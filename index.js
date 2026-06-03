@@ -23,7 +23,7 @@ const PREFIX = "u!";
 const DATA_FILE = "./data.json";
 
 // Hardcoded channel IDs
-const BIRTHDAY_CHANNEL_ID = "1422321497577623622";
+const BIRTHDAY_CHANNEL_ID = "1421050807989567509";
 const WELCOME_CHANNEL_ID = "1422311794382475284";
 
 // ─── Custom Role Feature ────────────────────────────────────────────────────
